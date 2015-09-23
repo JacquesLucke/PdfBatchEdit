@@ -55,8 +55,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BatchFile.cs" />
+    <Compile Include="GenericFile.cs" />
     <Compile Include="SourceFile.cs" />
-    <Compile Include="SourceFiles.cs" />
+    <Compile Include="FilesBatch.cs" />
+    <Compile Include="TargetFile.cs" />
     <Page Include="BatchEditWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

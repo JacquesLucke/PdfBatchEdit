@@ -7,28 +7,28 @@ using System.Threading.Tasks;
 
 namespace PdfBatchEdit
 {
-    class SourceFiles : IEnumerable
+    class FilesBatch : IEnumerable
     {
-        private List<SourceFile> files = new List<SourceFile>();
+        private List<BatchFile> files = new List<BatchFile>();
 
         public void New(string path)
         {
-            SourceFile file = new SourceFile(path);
+            BatchFile file = BatchFile.FromPath(path);
             files.Add(file);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return (IEnumerator)new SourceFilesEnum(files);
+            return (IEnumerator)new FilesBatchEnum(files);
         }
     }
 
-    class SourceFilesEnum : IEnumerator
+    class FilesBatchEnum : IEnumerator
     {
-        private List<SourceFile> files;
+        private List<BatchFile> files;
         private int position = -1;
 
-        public SourceFilesEnum(List<SourceFile> files)
+        public FilesBatchEnum(List<BatchFile> files)
         {
             this.files = files;
         }
@@ -41,7 +41,7 @@ namespace PdfBatchEdit
             }
         }
 
-        private SourceFile GetCurrent()
+        private BatchFile GetCurrent()
         {
             try
             {
