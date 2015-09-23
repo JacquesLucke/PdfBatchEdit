@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3E299260-3EF0-4B07-A53A-915BD20B5C21}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PdfBatchEdit</RootNamespace>
     <AssemblyName>PdfBatchEdit</AssemblyName>
@@ -60,6 +60,8 @@
     </ApplicationDefinition>
     <Compile Include="BatchFile.cs" />
     <Compile Include="GenericFile.cs" />
+    <Compile Include="IBatchFilesGenerator.cs" />
+    <Compile Include="LoadFilesFromDatabase.cs" />
     <Compile Include="SourceFile.cs" />
     <Compile Include="BatchFiles.cs" />
     <Compile Include="TargetFile.cs" />
