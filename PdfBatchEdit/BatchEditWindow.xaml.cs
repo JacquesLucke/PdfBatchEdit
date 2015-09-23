@@ -46,5 +46,23 @@ namespace PdfBatchEdit
             BatchFile batchFile = (BatchFile)((Button)e.Source).DataContext;
             pdfViewer.Source = batchFile.Source.Uri;
         }
+
+        private void resetButton_Click(object sender, RoutedEventArgs e)
+        {
+            data.Reset();
+        }
+
+        private void removeButton_Click(object sender, RoutedEventArgs e)
+        {
+            List<BatchFile> itemsToRemove = new List<BatchFile>();
+            foreach (BatchFile batchFile in filesListBox.SelectedItems)
+            {
+                itemsToRemove.Add(batchFile);
+            }
+            foreach (BatchFile batchFile in itemsToRemove)
+            {
+                data.BatchFiles.Remove(batchFile);
+            }
+        }
     }
 }

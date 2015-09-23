@@ -12,22 +12,24 @@
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <ListBox x:Name="filesListBox" Grid.Column="0" ItemsSource="{Binding}" Margin="10,51,10,10" HorizontalContentAlignment="Stretch">
+        <ListBox x:Name="filesListBox" Grid.Column="0" ItemsSource="{Binding}" Margin="10,37,10,10" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid Margin="3">
+                    <Grid Margin="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="60" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{Binding Source.Name}" Grid.Column="0" />
-                        <Button Content="Preview" Grid.Column="1" Click="previewFile_Click" />
+                        <Button Content="Preview" Grid.Column="1" Click="previewFile_Click" Width="60" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
         <WebBrowser x:Name="pdfViewer" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 0, 0, 0" />
-        <Button x:Name="newSourceFilesButton" Content="New Source Files" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="113" Click="newSourceFilesButton_Click" />
+        <Button x:Name="newSourceFilesButton" Content="Load" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="60" Click="newSourceFilesButton_Click" Height="22" />
+        <Button x:Name="removeButton" Content="Remove" Margin="96,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="22" Click="removeButton_Click"/>
+        <Button x:Name="resetButton" Content="Reset" Margin="161,10,0,0" VerticalAlignment="Top" Width="60" Height="22" HorizontalAlignment="Left" BorderThickness="1" Cursor="" Click="resetButton_Click"/>
     </Grid>
 </Window>

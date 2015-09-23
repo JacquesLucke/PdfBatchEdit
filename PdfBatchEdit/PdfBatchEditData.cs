@@ -17,5 +17,10 @@ namespace PdfBatchEdit
             get { return batchFiles; }
         }
 
+        public void Reset()
+        {
+            batchFiles.Clear();
+        }
+
     }
 }
