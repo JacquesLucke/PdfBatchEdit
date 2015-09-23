@@ -17,10 +17,16 @@ namespace PdfBatchEdit
 {
     public partial class MainWindow : Window
     {
+        PdfBatchEditData data;
+
         public MainWindow()
         {
             InitializeComponent();
+            data = new PdfBatchEditData();
             pdfViewer.Source = new Uri(@"C:\Users\Jacques Lucke\Desktop\test.pdf");
+            data.SourceFiles.New(@"C:\Users\Jacques Lucke\Desktop\test.pdf");
+            filesListBox.ItemsSource = data.SourceFiles;
+            
         }
     }
 }
