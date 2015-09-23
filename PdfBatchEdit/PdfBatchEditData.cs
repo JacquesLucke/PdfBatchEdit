@@ -8,11 +8,11 @@ namespace PdfBatchEdit
 {
     class PdfBatchEditData
     {
-        private FilesBatch sourceFiles = new FilesBatch();
+        private BatchFiles sourceFiles = new BatchFiles();
 
         public PdfBatchEditData() { }
 
-        public FilesBatch SourceFiles
+        public BatchFiles SourceFiles
         {
             get { return sourceFiles; }
         }

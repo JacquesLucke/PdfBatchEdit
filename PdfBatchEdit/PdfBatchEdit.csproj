@@ -58,7 +58,7 @@
     <Compile Include="BatchFile.cs" />
     <Compile Include="GenericFile.cs" />
     <Compile Include="SourceFile.cs" />
-    <Compile Include="FilesBatch.cs" />
+    <Compile Include="BatchFiles.cs" />
     <Compile Include="TargetFile.cs" />
     <Page Include="BatchEditWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

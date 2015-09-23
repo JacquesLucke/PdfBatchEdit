@@ -12,8 +12,9 @@
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <ListBox x:Name="filesListBox" Grid.Column="0" HorizontalAlignment="Left" Height="100" Margin="56,64,0,0" VerticalAlignment="Top" Width="100"/>
+        <ListBox x:Name="filesListBox" Grid.Column="0" ItemsSource="{Binding}" Margin="10,51,10,10"/>
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
         <WebBrowser x:Name="pdfViewer" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 0, 0, 0" />
+        <Button x:Name="newSourceFilesButton" Content="New Source Files" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="113" Click="newSourceFilesButton_Click"/>
     </Grid>
 </Window>

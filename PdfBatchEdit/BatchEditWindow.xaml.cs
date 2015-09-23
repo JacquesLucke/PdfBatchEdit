@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,9 +25,20 @@ namespace PdfBatchEdit
             InitializeComponent();
             data = new PdfBatchEditData();
             pdfViewer.Source = new Uri(@"C:\Users\Jacques Lucke\Desktop\test.pdf");
-            data.SourceFiles.New(@"C:\Users\Jacques Lucke\Desktop\test.pdf");
-            filesListBox.ItemsSource = data.SourceFiles;
-            
+            filesListBox.DataContext = data.SourceFiles;
+        }
+
+        private void newSourceFilesButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = true;
+            if (ofd.ShowDialog() == true)
+            {
+                foreach (string path in ofd.FileNames)
+                {
+                    data.SourceFiles.NewBatchFile(path);
+                }
+            }
         }
     }
 }
