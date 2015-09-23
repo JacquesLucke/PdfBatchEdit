@@ -24,8 +24,7 @@ namespace PdfBatchEdit
         {
             InitializeComponent();
             data = new PdfBatchEditData();
-            pdfViewer.Source = new Uri(@"C:\Users\Jacques Lucke\Desktop\test.pdf");
-            filesListBox.DataContext = data.SourceFiles;
+            filesListBox.DataContext = data.BatchFiles;
         }
 
         private void newSourceFilesButton_Click(object sender, RoutedEventArgs e)
@@ -37,7 +36,7 @@ namespace PdfBatchEdit
             {
                 foreach (string path in ofd.FileNames)
                 {
-                    data.SourceFiles.NewBatchFile(path);
+                    data.BatchFiles.NewBatchFile(path);
                 }
             }
         }

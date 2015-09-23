@@ -8,13 +8,13 @@ namespace PdfBatchEdit
 {
     class PdfBatchEditData
     {
-        private BatchFiles sourceFiles = new BatchFiles();
+        private BatchFiles batchFiles = new BatchFiles();
 
         public PdfBatchEditData() { }
 
-        public BatchFiles SourceFiles
+        public BatchFiles BatchFiles
         {
-            get { return sourceFiles; }
+            get { return batchFiles; }
         }
 
     }
