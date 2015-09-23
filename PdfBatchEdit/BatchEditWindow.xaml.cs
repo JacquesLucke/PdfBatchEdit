@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PdfBatchEdit
 {
@@ -34,10 +36,9 @@ namespace PdfBatchEdit
             ofd.Multiselect = true;
             if (ofd.ShowDialog() == true)
             {
-                foreach (string path in ofd.FileNames)
-                {
-                    data.BatchFiles.NewBatchFile(path);
-                }
+                List<BatchFile> files = new List<BatchFile>();
+                foreach (string path in ofd.FileNames) { files.Add(BatchFile.FromPath(path)); }
+                insertBatchFilesWithDelay(files);
             }
         }
 
@@ -63,6 +64,21 @@ namespace PdfBatchEdit
             {
                 data.BatchFiles.Remove(batchFile);
             }
+        }
+
+        private void insertBatchFilesWithDelay(List<BatchFile> batchFiles)
+        {
+            Task.Factory.StartNew(() =>
+               {
+                   foreach (BatchFile file in batchFiles)
+                   {
+                       Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                           {
+                               data.BatchFiles.Add(file);
+                           }), DispatcherPriority.Background);
+                       Thread.Sleep(50);
+                   }
+               });
         }
     }
 }
