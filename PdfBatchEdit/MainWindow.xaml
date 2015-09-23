@@ -5,8 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PdfBatchEdit"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Pdf Batch Edit" Height="350" Width="525">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+        <WebBrowser x:Name="pdfViewer" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 0, 0, 0" />
+
     </Grid>
 </Window>

@@ -15,14 +15,12 @@ using System.Windows.Shapes;
 
 namespace PdfBatchEdit
 {
-    /// <summary>
-    /// Interaktionslogik für MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
+            pdfViewer.Source = new Uri(@"C:\Users\Jacques Lucke\Desktop\test.pdf");
         }
     }
 }
