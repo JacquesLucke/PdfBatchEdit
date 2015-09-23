@@ -31,6 +31,7 @@ namespace PdfBatchEdit
         private void newSourceFilesButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Pdf Files|*.pdf";
             ofd.Multiselect = true;
             if (ofd.ShowDialog() == true)
             {
@@ -39,6 +40,12 @@ namespace PdfBatchEdit
                     data.SourceFiles.NewBatchFile(path);
                 }
             }
+        }
+
+        private void previewFile_Click(object sender, RoutedEventArgs e)
+        {
+            BatchFile batchFile = (BatchFile)((Button)e.Source).DataContext;
+            pdfViewer.Source = batchFile.Source.Uri;
         }
     }
 }

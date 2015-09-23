@@ -20,6 +20,11 @@ namespace PdfBatchEdit
             return file;
         }
 
+        public SourceFile Source
+        {
+            get { return source; }
+        }
+
         public override string ToString()
         {
             return source.Name;
