@@ -1,9 +1,4 @@
 ﻿using PdfSharp.Pdf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PdfBatchEdit
 {
@@ -11,8 +6,12 @@ namespace PdfBatchEdit
     {
         private SourceFile source;
         private TargetFile target;
+        private string id;
 
-        public BatchFile() { }
+        public BatchFile()
+        {
+            id = Utils.GetRandomString(10);
+        }
 
         public static BatchFile FromPath(string path)
         {
