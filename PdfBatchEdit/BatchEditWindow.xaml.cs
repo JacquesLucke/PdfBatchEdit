@@ -18,6 +18,9 @@ namespace PdfBatchEdit
             InitializeComponent();
             data = new PdfBatchEditData();
             filesListBox.DataContext = data.BatchFiles;
+            effectsListBox.DataContext = data.Effects;
+            data.Effects.Add(new AddTextEffect());
+
         }
 
         private void newSourceFilesButton_Click(object sender, RoutedEventArgs e)

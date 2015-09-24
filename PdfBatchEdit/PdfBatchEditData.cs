@@ -9,7 +9,6 @@ namespace PdfBatchEdit
 
         public PdfBatchEditData()
         {
-            effects.Add(new AddTextEffect());
         }
 
         public BatchFiles BatchFiles

@@ -14,5 +14,10 @@ namespace PdfBatchEdit
             XFont font = new XFont("Verdana", 15, XFontStyle.Regular);
             gfx.DrawString(Text, font, XBrushes.Red, new XPoint(300, 200));
         }
+
+        public override string ToString()
+        {
+            return "Add Text: " + Text;
+        }
     }
 }
