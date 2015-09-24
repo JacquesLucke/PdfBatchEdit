@@ -77,6 +77,7 @@
     <Compile Include="SourceFile.cs" />
     <Compile Include="BatchFiles.cs" />
     <Compile Include="TargetFile.cs" />
+    <Compile Include="Utils.cs" />
     <Page Include="BatchEditWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

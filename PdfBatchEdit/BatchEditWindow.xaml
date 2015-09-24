@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PdfBatchEdit"
         mc:Ignorable="d"
-        Title="Pdf Batch Edit" Height="350" Width="525" Closed="Window_Closed">
+        Title="Pdf Batch Edit" Height="493" Width="703" Closed="Window_Closed">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />

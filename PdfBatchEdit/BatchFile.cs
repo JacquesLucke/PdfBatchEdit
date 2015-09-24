@@ -33,25 +33,18 @@ namespace PdfBatchEdit
 
         public GenericFile GeneratePreview(PdfEffects effects)
         {
-            GenericFile file = new GenericFile(getNewPreviewPath());
+            GenericFile file = getNewPreviewFile();
             file.EnsureDirectory();
             PdfDocument document = ApplyEffects(effects);
             document.Save(file.Path);
             return file;
         }
 
-        private string getNewPreviewPath()
+        private GenericFile getNewPreviewFile()
         {
-            string chars = "abcdefghijklmnopqrstuvwxyz";
-            int length = 10;
-            string name = "";
-            Random random = new Random();
-
-            for (int i = 0; i < length; i++)
-            {
-                name += chars[random.Next(chars.Length)];
-            }
-            return AppDomain.CurrentDomain.BaseDirectory + "previews\\" + name + ".pdf";
+            string fileName = Utils.GetRandomString(10) + ".pdf";
+            string path = Utils.MainDirectory + "previews\\" + fileName;
+            return new GenericFile(path);
         }
 
         public PdfDocument ApplyEffects(PdfEffects effects)
