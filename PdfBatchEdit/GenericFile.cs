@@ -16,14 +16,29 @@ namespace PdfBatchEdit
             this.path = path;
         }
 
+        public void EnsureDirectory()
+        {
+            System.IO.Directory.CreateDirectory(this.Directory);
+        }
+
         public Uri Uri
         {
             get { return new Uri(path); }
         }
 
+        public string Directory
+        {
+            get { return System.IO.Path.GetDirectoryName(path); }
+        }
+
+        public string Path
+        {
+            get { return path; }
+        }
+
         public string Name
         {
-            get { return Path.GetFileNameWithoutExtension(path); }
+            get { return System.IO.Path.GetFileNameWithoutExtension(path); }
         }
 
         public override string ToString()

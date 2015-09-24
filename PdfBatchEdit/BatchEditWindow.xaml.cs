@@ -45,7 +45,8 @@ namespace PdfBatchEdit
         private void previewFile_Click(object sender, RoutedEventArgs e)
         {
             BatchFile batchFile = (BatchFile)((Button)e.Source).DataContext;
-            pdfViewer.Source = batchFile.Source.Uri;
+            GenericFile previewFile = batchFile.GeneratePreview(data.Effects);
+            pdfViewer.Source = previewFile.Uri;
         }
 
         private void resetButton_Click(object sender, RoutedEventArgs e)
@@ -79,6 +80,11 @@ namespace PdfBatchEdit
                        Thread.Sleep(50);
                    }
                });
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            data.RemoveTemporaryFiles();
         }
     }
 }
