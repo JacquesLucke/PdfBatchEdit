@@ -8,48 +8,62 @@
         Title="Pdf Batch Edit" Height="493" Width="703" Closed="Window_Closed">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="5" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ListBox x:Name="filesListBox" Grid.Column="0" ItemsSource="{Binding}" Margin="10,37,10,10" HorizontalContentAlignment="Stretch" SelectionMode="Extended" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Visible">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="60" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Source.Name}" Grid.Column="0" />
-                        <Button Content="Preview" Grid.Column="1" Click="previewFile_Click" Width="60" />
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="{x:Type ListBoxItem}">
-                    <Setter Property="LayoutTransform">
-                        <Setter.Value>
-                            <ScaleTransform x:Name="transform" />
-                        </Setter.Value>
-                    </Setter>
-                    <Style.Triggers>
-                        <EventTrigger RoutedEvent="Loaded">
-                            <EventTrigger.Actions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:.1" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger.Actions>
-                        </EventTrigger>
-                    </Style.Triggers>
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
+        
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="350"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            
+            <Button x:Name="newSourceFilesButton" Grid.Row="0" Content="Load" HorizontalAlignment="Left" Margin="10,21,0,0" VerticalAlignment="Top" Width="60" Click="newSourceFilesButton_Click" Height="22" />
+            <Button x:Name="removeButton" Grid.Row="0" Content="Remove" Margin="101,21,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="22" Click="removeButton_Click"/>
+            <Button x:Name="resetButton" Grid.Row="0" Content="Reset" Margin="166,21,0,0" VerticalAlignment="Top" Width="60" Height="22" HorizontalAlignment="Left" BorderThickness="1" Cursor="" Click="resetButton_Click"/>
+            <ListBox x:Name="filesListBox" Grid.Row="0" ItemsSource="{Binding}" Margin="10,48,10,5" HorizontalContentAlignment="Stretch" SelectionMode="Extended" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="60" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Source.Name}" Grid.Column="0" />
+                            <Button Content="Preview" Grid.Column="1" Click="previewFile_Click" Width="60" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="LayoutTransform">
+                            <Setter.Value>
+                                <ScaleTransform x:Name="transform" />
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:.1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
+            <ListBox x:Name="listBox" Grid.Row="2" Margin="10,5,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+
+
+        </Grid>
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
         <WebBrowser x:Name="pdfViewer" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 0, 0, 0" />
-        <Button x:Name="newSourceFilesButton" Content="Load" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="60" Click="newSourceFilesButton_Click" Height="22" />
-        <Button x:Name="removeButton" Content="Remove" Margin="96,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="22" Click="removeButton_Click"/>
-        <Button x:Name="resetButton" Content="Reset" Margin="161,10,0,0" VerticalAlignment="Top" Width="60" Height="22" HorizontalAlignment="Left" BorderThickness="1" Cursor="" Click="resetButton_Click"/>
+
     </Grid>
 </Window>
