@@ -5,7 +5,7 @@ namespace PdfBatchEdit
 {
     class AddTextEffect : IPdfEffect
     {
-        public string text;
+        private string text;
 
         public AddTextEffect(string text)
         {

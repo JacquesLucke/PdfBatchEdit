@@ -69,6 +69,7 @@
     </ApplicationDefinition>
     <Compile Include="AddTextEffect.cs" />
     <Compile Include="BatchFile.cs" />
+    <Compile Include="EffectDataTemplateSelector.cs" />
     <Compile Include="GenericFile.cs" />
     <Compile Include="IBatchFilesGenerator.cs" />
     <Compile Include="IPdfEffect.cs" />
