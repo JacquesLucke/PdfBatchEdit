@@ -5,7 +5,12 @@ namespace PdfBatchEdit
 {
     class AddTextEffect : IPdfEffect
     {
-        public string text = "Hello World";
+        public string text;
+
+        public AddTextEffect(string text)
+        {
+            this.text = text;
+        }
 
         public void ApplyEffect(PdfDocument document)
         {
@@ -13,6 +18,7 @@ namespace PdfBatchEdit
             XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append);
             XFont font = new XFont("Verdana", 15, XFontStyle.Regular);
             gfx.DrawString(text, font, XBrushes.Red, new XPoint(300, 200));
+            gfx.Dispose();
         }
 
         public string Text
