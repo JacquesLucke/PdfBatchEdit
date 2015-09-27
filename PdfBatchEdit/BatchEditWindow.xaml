@@ -39,8 +39,15 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="60" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Source.Name}" Grid.Column="0" />
-                            <Button Content="Preview" Grid.Column="1" Click="previewFile_Click" Width="60" />
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{Binding Source.Name}" Grid.Column="0" Grid.Row="0" />
+                            <Button Content="Preview" Grid.Column="1" Grid.Row="0" Click="previewFile_Click" Width="60" />
+                            <ItemsControl Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="10,0,0,0" BorderThickness="0" ItemsSource="{Binding Path=LocalEffectSettings}">
+                                
+                            </ItemsControl>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
