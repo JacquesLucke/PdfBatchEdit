@@ -12,6 +12,7 @@ namespace PdfBatchEdit
         private double relativeY = 0.01;
         private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Right;
         private VerticalAlignment verticalAlignment = VerticalAlignment.Top;
+        private PagesType pages = PagesType.All;
 
         public AddTextEffect(string text)
         {
@@ -40,14 +41,27 @@ namespace PdfBatchEdit
         {
             return new AddTextEffectLocalSettings(this);
         }
-        
+
         public void ApplyEffect(IPdfEffectLocalSettings localDataObject, PdfDocument document)
         {
             AddTextEffectLocalSettings localData = (AddTextEffectLocalSettings)localDataObject;
             string drawText = Text;
             if (localData.UseLocalText) drawText = localData.Text;
 
-            PdfPage page = document.Pages[0];
+            for (int i = 0; i < document.PageCount; i++)
+            {
+                PdfPage page = document.Pages[i];
+                if (pages == PagesType.All) WriteOnPage(page, drawText);
+                if (pages == PagesType.First && i == 0)
+                {
+                    WriteOnPage(page, drawText);
+                    break;
+                }
+            }
+        }
+
+        private void WriteOnPage(PdfPage page, string drawText)
+        {
             XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append);
             XFont font = new XFont("Verdana", 15, XFontStyle.Regular);
 
@@ -113,5 +127,11 @@ namespace PdfBatchEdit
         Top,
         Bottom,
         Center
+    }
+
+    public enum PagesType
+    {
+        First,
+        All
     }
 }
