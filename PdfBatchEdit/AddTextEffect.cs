@@ -7,7 +7,11 @@ namespace PdfBatchEdit
 {
     class AddTextEffect : IPdfEffect
     {
-        private string text { get; set; }
+        private string text = "";
+        private double relativeX = 0.5;
+        private double relativeY = 0.01;
+        private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center;
+        private VerticalAlignment verticalAlignment = VerticalAlignment.Center;
 
         public AddTextEffect(string text)
         {
@@ -18,6 +22,18 @@ namespace PdfBatchEdit
         {
             get { return text; }
             set { text = value; }
+        }
+
+        public double RelativeX
+        {
+            get { return relativeX; }
+            set { relativeX = value; }
+        }
+
+        public double RelativeY
+        {
+            get { return relativeY; }
+            set { relativeY = value; }
         }
 
         public IPdfEffectLocalSettings GetLocalSettings()
@@ -34,8 +50,23 @@ namespace PdfBatchEdit
             PdfPage page = document.Pages[0];
             XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append);
             XFont font = new XFont("Verdana", 15, XFontStyle.Regular);
-            gfx.DrawString(drawText, font, XBrushes.Red, new XPoint(300, 200));
+
+            XSize size = gfx.MeasureString(drawText, font);
+            XPoint position = new XPoint();
+
+            position.X = page.Width * relativeX;
+            position.Y = page.Height * relativeY;
+            position = CorrectPosition(position, size);
+
+            gfx.DrawString(drawText, font, XBrushes.Red, position);
             gfx.Dispose();
+        }
+
+        private XPoint CorrectPosition(XPoint position, XSize size)
+        {
+            if (horizontalAlignment == HorizontalAlignment.Center) position.X -= size.Width / 2;
+            if (verticalAlignment == VerticalAlignment.Center) position.Y += size.Height / 2;
+            return position;
         }
     }
 
@@ -66,5 +97,19 @@ namespace PdfBatchEdit
             get { return useLocalText; }
             set { useLocalText = value; }
         }
+    }
+
+    public enum HorizontalAlignment
+    {
+        Left,
+        Right,
+        Center
+    }
+
+    public enum VerticalAlignment
+    {
+        Top,
+        Bottom,
+        Center
     }
 }
