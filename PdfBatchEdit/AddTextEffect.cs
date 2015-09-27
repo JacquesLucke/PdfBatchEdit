@@ -8,10 +8,10 @@ namespace PdfBatchEdit
     class AddTextEffect : IPdfEffect
     {
         private string text = "";
-        private double relativeX = 0.5;
+        private double relativeX = 0.99;
         private double relativeY = 0.01;
-        private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center;
-        private VerticalAlignment verticalAlignment = VerticalAlignment.Center;
+        private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Right;
+        private VerticalAlignment verticalAlignment = VerticalAlignment.Top;
 
         public AddTextEffect(string text)
         {
@@ -65,7 +65,9 @@ namespace PdfBatchEdit
         private XPoint CorrectPosition(XPoint position, XSize size)
         {
             if (horizontalAlignment == HorizontalAlignment.Center) position.X -= size.Width / 2;
+            if (horizontalAlignment == HorizontalAlignment.Right) position.X -= size.Width;
             if (verticalAlignment == VerticalAlignment.Center) position.Y += size.Height / 2;
+            if (verticalAlignment == VerticalAlignment.Top) position.Y += size.Height;
             return position;
         }
     }
