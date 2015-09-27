@@ -5,24 +5,22 @@ namespace PdfBatchEdit
     class BatchFile
     {
         private SourceFile source;
-        private TargetFile target;
-        private string id;
+        private LocalSettingsCollection localSettings;
 
-        public BatchFile()
+        public BatchFile(string path)
         {
-            id = Utils.GetRandomString(10);
-        }
-
-        public static BatchFile FromPath(string path)
-        {
-            BatchFile file = new BatchFile();
-            file.source = new SourceFile(path);
-            return file;
+            source = new SourceFile(path);
+            localSettings = new LocalSettingsCollection();
         }
 
         public SourceFile Source
         {
             get { return source; }
+        }
+
+        public LocalSettingsCollection LocalEffectSettings
+        {
+            get { return localSettings; }
         }
 
         public override string ToString()
@@ -49,9 +47,9 @@ namespace PdfBatchEdit
         public PdfDocument ApplyEffects(PdfEffects effects)
         {
             PdfDocument document = source.Load();
-            foreach (IPdfEffect effect in effects)
+            foreach (IPdfEffectLocalSettings effect in localSettings)
             {
-                effect.ApplyEffect(document);
+                effect.GetMainEffect().ApplyEffect(effect, document);
             }
             return document;
         }

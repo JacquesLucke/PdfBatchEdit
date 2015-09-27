@@ -9,7 +9,7 @@
     <Window.Resources>
         <DataTemplate x:Key="AddTextDataTemplate">
             <Grid Margin="1">
-                <TextBox Text="{Binding Path=Text}" />
+                <TextBox Text="{Binding Path=GlobalData.Text}" />
             </Grid>
         </DataTemplate>
         <local:EffectDataTemplateSelector x:Key="effectTemplateSelector" AddTextDataTemplate="{StaticResource AddTextDataTemplate}" />

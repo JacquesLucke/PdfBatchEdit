@@ -19,8 +19,8 @@ namespace PdfBatchEdit
             data = new PdfBatchEditData();
             filesListBox.DataContext = data.BatchFiles;
             effectsListBox.DataContext = data.Effects;
-            data.Effects.Add(new AddTextEffect("Hello World"));
-            data.Effects.Add(new AddTextEffect("Peter"));
+            data.AddEffectToAllFiles(new AddTextEffect("Hello World"));
+            data.AddEffectToAllFiles(new AddTextEffect("Peter"));
 
         }
 
@@ -31,9 +31,7 @@ namespace PdfBatchEdit
             ofd.Multiselect = true;
             if (ofd.ShowDialog() == true)
             {
-                List<BatchFile> files = new List<BatchFile>();
-                foreach (string path in ofd.FileNames) { files.Add(BatchFile.FromPath(path)); }
-                insertBatchFilesWithDelay(files);
+                insertBatchFilesWithDelay(ofd.FileNames);
             }
         }
 
@@ -62,15 +60,15 @@ namespace PdfBatchEdit
             }
         }
 
-        private void insertBatchFilesWithDelay(List<BatchFile> batchFiles)
+        private void insertBatchFilesWithDelay(string[] paths)
         {
             Task.Factory.StartNew(() =>
                {
-                   foreach (BatchFile file in batchFiles)
+                   foreach (string path in paths)
                    {
                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                            {
-                               data.BatchFiles.Add(file);
+                               data.AddFileWithAllEffects(path);
                            }), DispatcherPriority.Background);
                        Thread.Sleep(50);
                    }
