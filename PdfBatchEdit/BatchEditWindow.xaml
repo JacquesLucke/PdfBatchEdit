@@ -18,7 +18,7 @@
             <Grid Margin="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <CheckBox Grid.Column="0" IsChecked="{Binding Path=UseLocalText}" Content="Use Local Text" />
                 <TextBox Grid.Column="1" Text="{Binding Path=Text}" IsEnabled="{Binding Path=UseLocalText}" />
@@ -33,10 +33,10 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0">
+        <Grid Grid.Column="0" Margin="0,0,0.5,-0.5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="350"/>
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
                 <RowDefinition />
             </Grid.RowDefinitions>
 
@@ -56,7 +56,7 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
                             <TextBlock Text="{Binding Source.Name}" Grid.Column="0" Grid.Row="0" />
-                            <Button Content="Preview" Grid.Column="1" Grid.Row="0" Click="previewFile_Click" Width="60" />
+                            <Button Content="Preview" Grid.Column="1" Grid.Row="0" Click="previewFile_Click" Width="60" HorizontalAlignment="Right" />
                             <ItemsControl Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="10,0,0,0" BorderThickness="0" ItemsSource="{Binding Path=LocalEffectSettings}" ItemTemplateSelector="{StaticResource effectSettingsTemplateSelector}" />
                         </Grid>
                     </DataTemplate>
@@ -82,11 +82,11 @@
                     </Style>
                 </ListBox.ItemContainerStyle>
             </ListBox>
-            <GridSplitter Grid.Row="1" Height="5" VerticalAlignment="Stretch" />
-
+            <GridSplitter x:Name="gridSplitter" VerticalAlignment="Stretch" Grid.Row="1" HorizontalAlignment="Stretch" Height="5" />
             <ListBox x:Name="effectsListBox" Grid.Row="2" ItemsSource="{Binding}" Margin="10,5,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ItemTemplateSelector="{StaticResource effectTemplateSelector}">
 
             </ListBox>
+            
         </Grid>
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
         <WebBrowser x:Name="pdfViewer" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 0, 0, 0" />
