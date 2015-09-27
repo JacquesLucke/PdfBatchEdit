@@ -7,14 +7,14 @@ namespace PdfBatchEdit
 {
     class AddTextEffect : IPdfEffect
     {
-        private AddTextEffectGlobalSettings globalData = new AddTextEffectGlobalSettings();
+        private AddTextEffectSettings globalData = new AddTextEffectSettings();
 
         public AddTextEffect(string text)
         {
             globalData.Text = text;
         }
 
-        public AddTextEffectGlobalSettings GlobalData
+        public AddTextEffectSettings GlobalData
         {
             get { return globalData; }
         }
@@ -28,6 +28,7 @@ namespace PdfBatchEdit
         {
             AddTextEffectLocalSettings localData = (AddTextEffectLocalSettings)localDataObject;
             string text = globalData.Text;
+            if (localData.UseLocalText) text = localData.Text;
 
             PdfPage page = document.Pages[0];
             XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append);
@@ -37,9 +38,10 @@ namespace PdfBatchEdit
         }
     }
 
-    class AddTextEffectLocalSettings : IPdfEffectLocalSettings
+    class AddTextEffectLocalSettings : AddTextEffectSettings, IPdfEffectLocalSettings
     {
         private AddTextEffect main;
+        private bool useLocalText = false;
 
         public AddTextEffectLocalSettings(AddTextEffect main)
         {
@@ -50,15 +52,21 @@ namespace PdfBatchEdit
         {
             return main;
         }
+
+        public bool UseLocalText
+        {
+            get { return useLocalText; }
+            set { useLocalText = value; }
+        }
     }
 
-    class AddTextEffectGlobalSettings
+    class AddTextEffectSettings
     {
         private string text = "";
         private XBrush brush = XBrushes.Red;
         private XPoint position = new XPoint(300, 200);
 
-        public AddTextEffectGlobalSettings() { }
+        public AddTextEffectSettings() { }
 
         public string Text
         {

@@ -17,4 +17,14 @@ namespace PdfBatchEdit
             return AddTextDataTemplate;
         }
     }
+
+    public class EffectSettingsTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate AddTextSettingsDataTemplate { get; set; }
+
+        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        {
+            return AddTextSettingsDataTemplate;
+        }
+    }
 }
