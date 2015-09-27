@@ -20,7 +20,6 @@ namespace PdfBatchEdit
             filesListBox.DataContext = data.BatchFiles;
             effectsListBox.DataContext = data.Effects;
             data.AddEffectToAllFiles(new AddTextEffect("Hello World"));
-            data.AddEffectToAllFiles(new AddTextEffect("Peter"));
 
         }
 
