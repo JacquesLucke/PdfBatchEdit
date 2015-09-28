@@ -8,9 +8,9 @@ namespace PdfBatchEdit
     class AddTextEffect : IPdfEffect
     {
         private string text = "";
-        private double relativeX = 0.99;
+        private double relativeX = 0.5;
         private double relativeY = 0.01;
-        private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Right;
+        private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center;
         private VerticalAlignment verticalAlignment = VerticalAlignment.Top;
         private PagesType pages = PagesType.All;
 
