@@ -12,7 +12,8 @@ namespace PdfBatchEdit
         private double relativeY = 0.01;
         private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center;
         private VerticalAlignment verticalAlignment = VerticalAlignment.Top;
-        private PagesType pages = PagesType.All;
+        private PagesType pages = PagesType.First;
+        private double fontSize = 12;
 
         public AddTextEffect(string text)
         {
@@ -35,6 +36,12 @@ namespace PdfBatchEdit
         {
             get { return relativeY; }
             set { relativeY = value; }
+        }
+
+        public double FontSize
+        {
+            get { return fontSize; }
+            set { fontSize = value; }
         }
 
         public IPdfEffectLocalSettings GetLocalSettings()
@@ -63,7 +70,7 @@ namespace PdfBatchEdit
         private void WriteOnPage(PdfPage page, string drawText)
         {
             XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append);
-            XFont font = new XFont("Verdana", 15, XFontStyle.Regular);
+            XFont font = new XFont("Verdana", fontSize, XFontStyle.Regular);
 
             XSize size = gfx.MeasureString(drawText, font);
             XPoint position = new XPoint();
