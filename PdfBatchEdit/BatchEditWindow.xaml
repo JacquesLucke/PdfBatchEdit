@@ -9,7 +9,23 @@
     <Window.Resources>
         <DataTemplate x:Key="AddTextDataTemplate">
             <Grid Margin="1">
-                <TextBox Text="{Binding Path=Text}" />
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="250"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBox Text="{Binding Path=Text}" Grid.Column="0" Grid.Row="0" />
+                <DockPanel Grid.Row="0" Grid.Column="1">
+                    <TextBox Text="{Binding Path=RelativeX, StringFormat=N2}" Width="60" DockPanel.Dock="Left" />
+                    <Slider Value="{Binding Path=RelativeX}" Minimum="0" Maximum="1" SmallChange="0.01" LargeChange="0.1" HorizontalContentAlignment="Stretch" />
+                </DockPanel>
+                <DockPanel Grid.Row="1" Grid.Column="1">
+                    <TextBox Text="{Binding Path=RelativeY, StringFormat=N2}" Width="60" DockPanel.Dock="Left" />
+                    <Slider Value="{Binding Path=RelativeY}" Minimum="0" Maximum="1" SmallChange="0.01" LargeChange="0.1" HorizontalContentAlignment="Stretch" />
+                </DockPanel>
             </Grid>
         </DataTemplate>
         <local:EffectDataTemplateSelector x:Key="effectTemplateSelector" AddTextDataTemplate="{StaticResource AddTextDataTemplate}" />
@@ -28,9 +44,8 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0" Margin="0,0,0.5,-0.5">
@@ -39,10 +54,10 @@
                 <RowDefinition Height="5" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-
             <Button x:Name="newSourceFilesButton" Grid.Row="0" Content="Load" HorizontalAlignment="Left" Margin="10,21,0,0" VerticalAlignment="Top" Width="60" Click="newSourceFilesButton_Click" Height="22" />
-            <Button x:Name="removeButton" Grid.Row="0" Content="Remove" Margin="101,21,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="22" Click="removeButton_Click"/>
-            <Button x:Name="resetButton" Grid.Row="0" Content="Reset" Margin="166,21,0,0" VerticalAlignment="Top" Width="60" Height="22" HorizontalAlignment="Left" BorderThickness="1" Cursor="" Click="resetButton_Click"/>
+            <Button x:Name="exportButton" Content="Export" HorizontalAlignment="Left" Margin="75,21,0,0" VerticalAlignment="Top" Width="75" Click="exportButton_Click"/>
+            <Button x:Name="removeButton" Grid.Row="0" Content="Remove" Margin="179,21,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="22" Click="removeButton_Click"/>
+            <Button x:Name="resetButton" Grid.Row="0" Content="Reset" Margin="244,21,0,0" VerticalAlignment="Top" Width="46" Height="22" HorizontalAlignment="Left" BorderThickness="1" Cursor="" Click="resetButton_Click"/>
             <ListBox x:Name="filesListBox" Grid.Row="0" ItemsSource="{Binding}" Margin="10,48,10,5" HorizontalContentAlignment="Stretch" SelectionMode="Extended" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -83,12 +98,8 @@
                 </ListBox.ItemContainerStyle>
             </ListBox>
             <GridSplitter x:Name="gridSplitter" VerticalAlignment="Stretch" Grid.Row="1" HorizontalAlignment="Stretch" Height="5" />
-            <ListBox x:Name="effectsListBox" Grid.Row="2" ItemsSource="{Binding}" Margin="10,5,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ItemTemplateSelector="{StaticResource effectTemplateSelector}">
-
-            </ListBox>
-            
+            <ListBox x:Name="effectsListBox" Grid.Row="2" ItemsSource="{Binding}" Margin="10,5,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ItemTemplateSelector="{StaticResource effectTemplateSelector}" />
         </Grid>
-        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
         <WebBrowser x:Name="pdfViewer" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 0, 0, 0" />
 
     </Grid>

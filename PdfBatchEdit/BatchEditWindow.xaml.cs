@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using Forms = System.Windows.Forms;
 
 namespace PdfBatchEdit
 {
@@ -37,7 +38,7 @@ namespace PdfBatchEdit
         private void previewFile_Click(object sender, RoutedEventArgs e)
         {
             BatchFile batchFile = (BatchFile)((Button)e.Source).DataContext;
-            GenericFile previewFile = batchFile.GeneratePreview(data.Effects);
+            GenericFile previewFile = batchFile.GeneratePreview();
             pdfViewer.Source = previewFile.Uri;
         }
 
@@ -77,6 +78,29 @@ namespace PdfBatchEdit
         private void Window_Closed(object sender, EventArgs e)
         {
             data.RemoveTemporaryFiles();
+        }
+
+        private void exportButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (data.BatchFiles.Count == 0) return;
+
+            Forms.FolderBrowserDialog fbd = new Forms.FolderBrowserDialog();
+            if (fbd.ShowDialog() == Forms.DialogResult.OK)
+            {
+                try
+                {
+                    data.BatchFiles.Export(fbd.SelectedPath);
+                    if (MessageBox.Show("All files saved. Open Windows Explorer?", "Successful Export", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start(fbd.SelectedPath);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Stop);
+                }
+                
+            }
         }
     }
 }

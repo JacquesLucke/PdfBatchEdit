@@ -1,4 +1,5 @@
 ﻿using PdfSharp.Pdf;
+using System;
 
 namespace PdfBatchEdit
 {
@@ -28,13 +29,21 @@ namespace PdfBatchEdit
             return source.Name;
         }
 
-        public GenericFile GeneratePreview(PdfEffects effects)
+        public GenericFile GeneratePreview()
         {
             GenericFile file = getNewPreviewFile();
-            file.EnsureDirectory();
-            PdfDocument document = ApplyEffects(effects);
-            document.Save(file.Path);
+            Save(file);
             return file;
+        }
+
+        public void Save(GenericFile file, bool overwrite = true, bool overwriteSource = false)
+        {
+            if (file.Exists && !overwrite) throw new Exception("You are not allowed to overwrite existing files."); ;
+            if (file.Path == source.Path && !overwriteSource) throw new Exception("You are not allowed to overwrite the source file.");
+
+            file.EnsureDirectory();
+            PdfDocument document = ApplyEffects();
+            document.Save(file.Path);
         }
 
         private GenericFile getNewPreviewFile()
@@ -44,7 +53,7 @@ namespace PdfBatchEdit
             return new GenericFile(path);
         }
 
-        public PdfDocument ApplyEffects(PdfEffects effects)
+        public PdfDocument ApplyEffects()
         {
             PdfDocument document = source.Load();
             foreach (IPdfEffectLocalSettings effect in localSettings)
