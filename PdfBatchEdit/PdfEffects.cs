@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using PdfBatchEdit.Effects;
+using System.Collections.ObjectModel;
 
 namespace PdfBatchEdit
 {

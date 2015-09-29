@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using PdfBatchEdit.Effects;
+using System.IO;
 
 namespace PdfBatchEdit
 {

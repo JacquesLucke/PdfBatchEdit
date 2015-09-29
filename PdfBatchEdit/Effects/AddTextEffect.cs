@@ -5,7 +5,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace PdfBatchEdit
+namespace PdfBatchEdit.Effects
 {
     class AddTextEffect : IPdfEffect, INotifyPropertyChanged
     {

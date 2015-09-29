@@ -92,7 +92,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AddTextEffect.cs" />
+    <Compile Include="Effects\AddTextEffect.cs" />
     <Compile Include="BatchFile.cs" />
     <Compile Include="Converter\ColorToSolidBrushConverter.cs" />
     <Compile Include="ColorPickerDialog.xaml.cs">
@@ -103,7 +103,7 @@
     <Compile Include="GenericFile.cs" />
     <Compile Include="IBatchFilesGenerator.cs" />
     <Compile Include="Converter\InverseBooleanConverter.cs" />
-    <Compile Include="IPdfEffect.cs" />
+    <Compile Include="Effects\IPdfEffect.cs" />
     <Compile Include="LoadFilesFromDatabase.cs" />
     <Compile Include="LocalSettingsCollection.cs" />
     <Compile Include="PdfEffects.cs" />

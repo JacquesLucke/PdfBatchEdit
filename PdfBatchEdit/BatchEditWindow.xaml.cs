@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using PdfBatchEdit.Effects;
 using System;
 using System.Collections.Generic;
 using System.Threading;

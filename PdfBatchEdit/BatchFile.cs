@@ -1,4 +1,5 @@
-﻿using PdfSharp.Pdf;
+﻿using PdfBatchEdit.Effects;
+using PdfSharp.Pdf;
 using System;
 
 namespace PdfBatchEdit

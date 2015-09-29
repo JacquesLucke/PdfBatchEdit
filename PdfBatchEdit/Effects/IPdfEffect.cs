@@ -1,6 +1,6 @@
 ﻿using PdfSharp.Pdf;
 
-namespace PdfBatchEdit
+namespace PdfBatchEdit.Effects
 {
     interface IPdfEffect
     {
