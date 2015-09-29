@@ -102,6 +102,7 @@ namespace PdfBatchEdit
             if (cpd.ShowDialog() == true)
             {
                 button.Background = new SolidColorBrush(cpd.SelectedColor);
+                UpdatePreviewFromSelection();
             }
         }
 
