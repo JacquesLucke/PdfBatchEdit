@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace PdfBatchEdit
+namespace PdfBatchEdit.Converter
 {
     class InverseBooleanConverter : IValueConverter
     {

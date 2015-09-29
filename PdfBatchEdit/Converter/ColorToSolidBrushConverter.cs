@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace PdfBatchEdit
+namespace PdfBatchEdit.Converter
 {
     [ValueConversion(typeof(XColor), typeof(SolidColorBrush))]
     class ColorToSolidBrushConverter : IValueConverter
