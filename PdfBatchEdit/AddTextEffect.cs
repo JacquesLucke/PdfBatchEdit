@@ -8,6 +8,7 @@ namespace PdfBatchEdit
     class AddTextEffect : IPdfEffect
     {
         private string text = "";
+        private bool useLocalTexts = false;
         private double relativeX = 0.5;
         private double relativeY = 0.01;
         private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center;
@@ -25,6 +26,12 @@ namespace PdfBatchEdit
         {
             get { return text; }
             set { text = value; }
+        }
+
+        public bool UseLocalTexts
+        {
+            get { return useLocalTexts; }
+            set { useLocalTexts = value; }
         }
 
         public double RelativeX
@@ -60,7 +67,7 @@ namespace PdfBatchEdit
         {
             AddTextEffectLocalSettings localData = (AddTextEffectLocalSettings)localDataObject;
             string drawText = Text;
-            if (localData.UseLocalText) drawText = localData.Text;
+            if (useLocalTexts) drawText = localData.Text;
 
             for (int i = 0; i < document.PageCount; i++)
             {
@@ -105,11 +112,11 @@ namespace PdfBatchEdit
     {
         private AddTextEffect main;
         private string text = "";
-        private bool useLocalText = false;
 
-        public AddTextEffectLocalSettings(AddTextEffect main)
+        public AddTextEffectLocalSettings(AddTextEffect main, string text = "")
         {
             this.main = main;
+            this.text = text;
         }
 
         public IPdfEffect GetMainEffect()
@@ -123,10 +130,9 @@ namespace PdfBatchEdit
             set { text = value; }
         }
 
-        public bool UseLocalText
+        public bool LocalTextIsUsed
         {
-            get { return useLocalText; }
-            set { useLocalText = value; }
+            get { return main.UseLocalTexts; }
         }
     }
 

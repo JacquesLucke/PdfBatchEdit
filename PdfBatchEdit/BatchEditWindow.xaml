@@ -18,7 +18,11 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBox Text="{Binding Path=Text}" Grid.Row="0" />
+                <DockPanel Grid.Row="0">
+                    <Label Content="Text" Width="70" />
+                    <TextBox Text="{Binding Path=Text}" Width="180" />
+                    <CheckBox IsChecked="{Binding Path=UseLocalTexts}" Content="Use Local Texts" Margin="5,0,0,0" VerticalAlignment="Center" />
+                </DockPanel>
                 <DockPanel Grid.Row="1">
                     <Label Content="Horizontal" Width="70" />
                     <Slider Value="{Binding Path=RelativeX}" Width="240" TickPlacement="BottomRight" IsSnapToTickEnabled="True" TickFrequency="0.02" Minimum="0" Maximum="1" SmallChange="0.01" LargeChange="0.1" />
@@ -45,12 +49,7 @@
 
         <DataTemplate x:Key="AddTextSettingsDataTemplate">
             <Grid Margin="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <CheckBox Grid.Column="0" IsChecked="{Binding Path=UseLocalText}" Content="Use Local Text" />
-                <TextBox Grid.Column="1" Text="{Binding Path=Text}" IsEnabled="{Binding Path=UseLocalText}" />
+                <TextBox Text="{Binding Path=Text}" Visibility="{Binding Path=LocalTextIsUsed}" />
             </Grid>
         </DataTemplate>
         <local:EffectSettingsTemplateSelector x:Key="effectSettingsTemplateSelector" AddTextSettingsDataTemplate="{StaticResource AddTextSettingsDataTemplate}" />
