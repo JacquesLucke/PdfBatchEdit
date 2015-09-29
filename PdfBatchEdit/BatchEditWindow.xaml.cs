@@ -22,7 +22,6 @@ namespace PdfBatchEdit
             data = new PdfBatchEditData();
             filesListBox.DataContext = data.BatchFiles;
             effectsListBox.DataContext = data.Effects;
-            data.AddEffectToAllFiles(new AddTextEffect("Hello World"));
         }
 
         private void newSourceFilesButton_Click(object sender, RoutedEventArgs e)
@@ -132,6 +131,11 @@ namespace PdfBatchEdit
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdatePreviewFromSelection();
+        }
+
+        private void newTextEffectButton_Click(object sender, RoutedEventArgs e)
+        {
+            data.AddEffectToAllFiles(new AddTextEffect("Example"));
         }
     }
 }
