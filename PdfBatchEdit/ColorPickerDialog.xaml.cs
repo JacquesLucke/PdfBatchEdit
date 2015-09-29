@@ -32,5 +32,25 @@ namespace PdfBatchEdit
             DialogResult = false;
             Close();
         }
+
+        public Color SelectedColor
+        {
+            get
+            {
+                Color color = new Color();
+                color.R = colorCanvas.R;
+                color.G = colorCanvas.G;
+                color.B = colorCanvas.B;
+                color.A = colorCanvas.A;
+                return color;
+            }
+            set
+            {
+                colorCanvas.R = value.R;
+                colorCanvas.G = value.G;
+                colorCanvas.B = value.B;
+                colorCanvas.A = value.A;
+            }
+        }
     }
 }

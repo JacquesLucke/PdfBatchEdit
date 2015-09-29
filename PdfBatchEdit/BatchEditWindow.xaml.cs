@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Forms = System.Windows.Forms;
 
@@ -102,10 +103,16 @@ namespace PdfBatchEdit
             }
         }
 
-        private void pickTextColorButton_Click(object sender, RoutedEventArgs e)
+        private void chooseColorButton_Click(object sender, RoutedEventArgs e)
         {
+            Button button = (Button)sender;
+
             ColorPickerDialog cpd = new ColorPickerDialog();
-            cpd.ShowDialog();
+            cpd.SelectedColor = ((SolidColorBrush)button.Background).Color;
+            if (cpd.ShowDialog() == true)
+            {
+                button.Background = new SolidColorBrush(cpd.SelectedColor);
+            }
         }
     }
 }

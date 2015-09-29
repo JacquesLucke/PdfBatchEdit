@@ -32,7 +32,10 @@
                     <Slider Value="{Binding Path=FontSize}" Width="240"  Minimum="1" Maximum="100" SmallChange="0.01" LargeChange="0.1" />
                     <TextBox Text="{Binding Path=FontSize, StringFormat=N1}" Width="50" />
                 </DockPanel>
-                <Button Name="pickTextColorButton" Grid.Row="4" Click="pickTextColorButton_Click" Content="Pick Color" />
+                <DockPanel Grid.Row="4">
+                    <Label Content="Font Color" Width="70" VerticalAlignment="Center" />
+                    <Button Grid.Row="4" Focusable="False" Click="chooseColorButton_Click" HorizontalAlignment="Left" ToolTip="Click to change the color" Background="#FF3D65AC" Height="30" Width="100" />
+                </DockPanel>
             </Grid>
         </DataTemplate>
         <local:EffectDataTemplateSelector x:Key="effectTemplateSelector" AddTextDataTemplate="{StaticResource AddTextDataTemplate}" />
