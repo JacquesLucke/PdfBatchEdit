@@ -100,6 +100,8 @@
     </Compile>
     <Compile Include="Converter\ConvertBooleanToVisibility.cs" />
     <Compile Include="EffectDataTemplateSelector.cs" />
+    <Compile Include="EnumerationMarkupExtension.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="GenericFile.cs" />
     <Compile Include="IBatchFilesGenerator.cs" />
     <Compile Include="Converter\InverseBooleanConverter.cs" />

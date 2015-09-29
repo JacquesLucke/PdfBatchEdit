@@ -107,6 +107,26 @@ namespace PdfBatchEdit.Effects
             }
         }
 
+        public HorizontalAlignment HorizontalAlignment
+        {
+            get { return horizontalAlignment; }
+            set
+            {
+                horizontalAlignment = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public VerticalAlignment VerticalAlignment
+        {
+            get { return verticalAlignment; }
+            set
+            {
+                verticalAlignment = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public IPdfEffectLocalSettings GetLocalSettings()
         {
             AddTextEffectLocalSettings settings = new AddTextEffectLocalSettings(this);
@@ -195,27 +215,5 @@ namespace PdfBatchEdit.Effects
                 PropertyChanged(this, new PropertyChangedEventArgs("LocalTextIsUsed"));
             }
         }
-    }
-
-    public enum HorizontalAlignment
-    {
-        Left,
-        Right,
-        Center
-    }
-
-    public enum VerticalAlignment
-    {
-        Top,
-        Bottom,
-        Center
-    }
-
-    public enum PagesType
-    {
-        [Description("First Page Only")]
-        First,
-        [Description("All Pages")]
-        All
     }
 }
