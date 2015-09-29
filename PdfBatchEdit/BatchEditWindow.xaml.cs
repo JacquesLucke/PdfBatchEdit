@@ -127,5 +127,10 @@ namespace PdfBatchEdit
             GenericFile previewFile = batchFile.GeneratePreview();
             pdfViewer.Source = previewFile.Uri;
         }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdatePreviewFromSelection();
+        }
     }
 }

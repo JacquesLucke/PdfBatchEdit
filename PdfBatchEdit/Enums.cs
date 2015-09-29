@@ -11,20 +11,20 @@ namespace PdfBatchEdit
     {
         [Description("Left")]
         Left,
-        [Description("Right")]
-        Right,
         [Description("Center")]
-        Center
+        Center,
+        [Description("Right")]
+        Right
     }
 
     public enum VerticalAlignment
     {
         [Description("Top")]
         Top,
-        [Description("Bottom")]
-        Bottom,
         [Description("Center")]
-        Center
+        Center,
+        [Description("Bottom")]
+        Bottom
     }
 
     public enum PagesType

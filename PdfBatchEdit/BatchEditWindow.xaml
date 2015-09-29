@@ -55,7 +55,8 @@
                               DisplayMemberPath="Description"
                               ItemsSource="{Binding Source={local:EnumerationMarkup {x:Type local:HorizontalAlignment}}}"
                               SelectedValue="{Binding HorizontalAlignment}"
-                              SelectedValuePath="Value" />
+                              SelectedValuePath="Value"
+                              SelectionChanged="ComboBox_SelectionChanged" />
                 </DockPanel>
                 <DockPanel Grid.Row="2" Margin="4,4,4,4">
                     <Label Width="70" Content="Vertical" />
@@ -76,7 +77,8 @@
                               DisplayMemberPath="Description"
                               ItemsSource="{Binding Source={local:EnumerationMarkup {x:Type local:VerticalAlignment}}}"
                               SelectedValue="{Binding VerticalAlignment}"
-                              SelectedValuePath="Value" />
+                              SelectedValuePath="Value"
+                              SelectionChanged="ComboBox_SelectionChanged" />
                 </DockPanel>
                 <DockPanel Grid.Row="3" Margin="4,4,4,4">
                     <Label Width="70" Content="Font Size" />
@@ -113,7 +115,8 @@
                     <ComboBox DisplayMemberPath="Description"
                               ItemsSource="{Binding Source={local:EnumerationMarkup {x:Type local:PagesType}}}"
                               SelectedValue="{Binding Pages}"
-                              SelectedValuePath="Value" />
+                              SelectedValuePath="Value"
+                              SelectionChanged="ComboBox_SelectionChanged" />
                 </DockPanel>
             </Grid>
         </DataTemplate>
