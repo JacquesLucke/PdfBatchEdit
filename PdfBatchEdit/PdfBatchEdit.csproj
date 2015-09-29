@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3E299260-3EF0-4B07-A53A-915BD20B5C21}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PdfBatchEdit</RootNamespace>
     <AssemblyName>PdfBatchEdit</AssemblyName>
@@ -94,6 +94,7 @@
     </ApplicationDefinition>
     <Compile Include="AddTextEffect.cs" />
     <Compile Include="BatchFile.cs" />
+    <Compile Include="ColorToSolidBrushConverter.cs" />
     <Compile Include="ColorPickerDialog.xaml.cs">
       <DependentUpon>ColorPickerDialog.xaml</DependentUpon>
     </Compile>

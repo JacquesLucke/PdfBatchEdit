@@ -7,6 +7,8 @@
         mc:Ignorable="d"
         Title="Pdf Batch Edit" Height="700" Width="800" Closed="Window_Closed">
     <Window.Resources>
+        <local:ColorToSolidBrushConverter x:Key="colorBrushConverter" />
+        
         <DataTemplate x:Key="AddTextDataTemplate">
             <Grid Margin="1">
                 <Grid.RowDefinitions>
@@ -34,10 +36,11 @@
                 </DockPanel>
                 <DockPanel Grid.Row="4">
                     <Label Content="Font Color" Width="70" VerticalAlignment="Center" />
-                    <Button Grid.Row="4" Focusable="False" Click="chooseColorButton_Click" HorizontalAlignment="Left" ToolTip="Click to change the color" Background="#FF3D65AC" Height="30" Width="100" />
+                    <Button Grid.Row="4" Focusable="False" Click="chooseColorButton_Click" HorizontalAlignment="Left" ToolTip="Click to change the color" Background="{Binding Path=FontColor, Converter={StaticResource colorBrushConverter}, Mode=TwoWay}" Height="30" Width="100" />
                 </DockPanel>
             </Grid>
         </DataTemplate>
+
         <local:EffectDataTemplateSelector x:Key="effectTemplateSelector" AddTextDataTemplate="{StaticResource AddTextDataTemplate}" />
 
         <DataTemplate x:Key="AddTextSettingsDataTemplate">
@@ -66,8 +69,8 @@
             </Grid.RowDefinitions>
             <Button x:Name="newSourceFilesButton" Grid.Row="0" Content="Load" HorizontalAlignment="Left" Margin="10,21,0,0" VerticalAlignment="Top" Width="60" Click="newSourceFilesButton_Click" Height="22" />
             <Button x:Name="exportButton" Content="Export" HorizontalAlignment="Left" Margin="75,21,0,0" VerticalAlignment="Top" Width="75" Click="exportButton_Click"/>
-            <Button x:Name="removeButton" Grid.Row="0" Content="Remove" Margin="279,21,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="22" Click="removeButton_Click"/>
-            <Button x:Name="resetButton" Grid.Row="0" Content="Reset" Margin="344,21,0,0" VerticalAlignment="Top" Width="46" Height="22" HorizontalAlignment="Left" BorderThickness="1" Cursor="" Click="resetButton_Click"/>
+            <Button x:Name="removeButton" Opacity="0.9" Grid.Row="0" Content="Remove" Margin="279,21,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="22" Click="removeButton_Click"/>
+            <Button x:Name="resetButton" Opacity="0.9" Grid.Row="0" Content="Reset" Margin="344,21,0,0" VerticalAlignment="Top" Width="46" Height="22" HorizontalAlignment="Left" BorderThickness="1" Cursor="" Click="resetButton_Click"/>
             <ListBox x:Name="filesListBox" Grid.Row="0" ItemsSource="{Binding}" Margin="10,48,10,5" HorizontalContentAlignment="Stretch" SelectionMode="Extended" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -86,26 +89,6 @@
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListBoxItem}">
-                        <Setter Property="LayoutTransform">
-                            <Setter.Value>
-                                <ScaleTransform x:Name="transform" />
-                            </Setter.Value>
-                        </Setter>
-                        <Style.Triggers>
-                            <EventTrigger RoutedEvent="Loaded">
-                                <EventTrigger.Actions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:.1" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger.Actions>
-                            </EventTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ListBox.ItemContainerStyle>
             </ListBox>
             <GridSplitter x:Name="gridSplitter" VerticalAlignment="Stretch" Grid.Row="1" HorizontalAlignment="Stretch" Height="5" />
             <ListBox x:Name="effectsListBox" Grid.Row="2" ItemsSource="{Binding}" Margin="10,5,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ItemTemplateSelector="{StaticResource effectTemplateSelector}" />

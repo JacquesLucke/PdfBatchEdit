@@ -31,7 +31,7 @@ namespace PdfBatchEdit
             ofd.Multiselect = true;
             if (ofd.ShowDialog() == true)
             {
-                insertBatchFilesWithDelay(ofd.FileNames);
+                insertFiles(ofd.FileNames);
             }
         }
 
@@ -44,35 +44,34 @@ namespace PdfBatchEdit
 
         private void resetButton_Click(object sender, RoutedEventArgs e)
         {
-            data.Reset();
+            if (MessageBox.Show("Do you really want to reset the program?", "Confirm Dialog", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                data.Reset();
+            }
         }
 
         private void removeButton_Click(object sender, RoutedEventArgs e)
         {
-            List<BatchFile> itemsToRemove = new List<BatchFile>();
-            foreach (BatchFile batchFile in filesListBox.SelectedItems)
+            if (MessageBox.Show("Do you really want to remove the selected files?", "Confirm Dialog", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                itemsToRemove.Add(batchFile);
-            }
-            foreach (BatchFile batchFile in itemsToRemove)
-            {
-                data.BatchFiles.Remove(batchFile);
+                List<BatchFile> itemsToRemove = new List<BatchFile>();
+                foreach (BatchFile batchFile in filesListBox.SelectedItems)
+                {
+                    itemsToRemove.Add(batchFile);
+                }
+                foreach (BatchFile batchFile in itemsToRemove)
+                {
+                    data.BatchFiles.Remove(batchFile);
+                }
             }
         }
 
-        private void insertBatchFilesWithDelay(string[] paths)
+        private void insertFiles(string[] paths)
         {
-            Task.Factory.StartNew(() =>
-               {
-                   foreach (string path in paths)
-                   {
-                       Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                           {
-                               data.AddFileWithAllEffects(path);
-                           }), DispatcherPriority.Background);
-                       Thread.Sleep(50);
-                   }
-               });
+            foreach (string path in paths)
+            {
+                data.AddFileWithAllEffects(path);
+            }
         }
 
         private void Window_Closed(object sender, EventArgs e)

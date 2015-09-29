@@ -14,7 +14,7 @@ namespace PdfBatchEdit
         private VerticalAlignment verticalAlignment = VerticalAlignment.Top;
         private PagesType pages = PagesType.First;
         private double fontSize = 12;
-        private XColor color = XColors.Black;
+        private XColor fontColor = XColors.Red;
 
         public AddTextEffect(string text)
         {
@@ -43,6 +43,12 @@ namespace PdfBatchEdit
         {
             get { return fontSize; }
             set { fontSize = value; }
+        }
+
+        public XColor FontColor
+        {
+            get { return fontColor; }
+            set { fontColor = value; }
         }
 
         public IPdfEffectLocalSettings GetLocalSettings()
@@ -79,7 +85,7 @@ namespace PdfBatchEdit
             position.Y = page.Height * relativeY;
             position = CorrectPosition(position, size);
 
-            XSolidBrush brush = new XSolidBrush(color);
+            XSolidBrush brush = new XSolidBrush(fontColor);
 
             gfx.DrawString(drawText, font, brush, position);
             gfx.Dispose();
