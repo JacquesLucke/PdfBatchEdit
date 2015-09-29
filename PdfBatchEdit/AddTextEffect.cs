@@ -38,13 +38,18 @@ namespace PdfBatchEdit
         public string Text
         {
             get { return text; }
-            set { text = value; }
+            set
+            {
+                text = value;
+                NotifyPropertyChanged();
+            }
         }
 
         public bool UseLocalTexts
         {
             get { return useLocalTexts; }
-            set {
+            set
+            {
                 useLocalTexts = value;
                 NotifyPropertyChanged();
                 foreach (AddTextEffectLocalSettings settings in localSettingsObjects)
@@ -55,25 +60,41 @@ namespace PdfBatchEdit
         public double RelativeX
         {
             get { return relativeX; }
-            set { relativeX = value; }
+            set
+            {
+                relativeX = value;
+                NotifyPropertyChanged();
+            }
         }
 
         public double RelativeY
         {
             get { return relativeY; }
-            set { relativeY = value; }
+            set
+            {
+                relativeY = value;
+                NotifyPropertyChanged();
+            }
         }
 
         public double FontSize
         {
             get { return fontSize; }
-            set { fontSize = value; }
+            set
+            {
+                fontSize = value;
+                NotifyPropertyChanged();
+            }
         }
 
         public XColor FontColor
         {
             get { return fontColor; }
-            set { fontColor = value; }
+            set
+            {
+                fontColor = value;
+                NotifyPropertyChanged();
+            }
         }
 
         public IPdfEffectLocalSettings GetLocalSettings()

@@ -10,7 +10,7 @@
         <local:ColorToSolidBrushConverter x:Key="colorBrushConverter" />
         <local:InverseBooleanConverter x:Key="inverseBooleanConverter" />
         <local:ConvertBooleanToVisibility x:Key="convertBooleanToVisibility" />
-        
+
         <DataTemplate x:Key="AddTextDataTemplate">
             <Grid Margin="1">
                 <Grid.RowDefinitions>
@@ -90,7 +90,8 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <GridSplitter x:Name="gridSplitter" VerticalAlignment="Stretch" Grid.Row="1" HorizontalAlignment="Stretch" Height="5" />
-            <ListBox x:Name="effectsListBox" Grid.Row="2" ItemsSource="{Binding}" Margin="10,5,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ItemTemplateSelector="{StaticResource effectTemplateSelector}" />
+            <Button x:Name="refreshPreviewButton" Grid.Row="2" Content="Refresh Preview" HorizontalAlignment="Right" Margin="0,5,9.5,0" VerticalAlignment="Top" Width="102" Click="refreshPreviewButton_Click"/>
+            <ListBox x:Name="effectsListBox" Grid.Row="2" ItemsSource="{Binding}" Margin="10,35,9.5,10" HorizontalAlignment="Stretch" ItemTemplateSelector="{StaticResource effectTemplateSelector}" />
         </Grid>
         <WebBrowser x:Name="pdfViewer" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 0, 0, 0" />
 

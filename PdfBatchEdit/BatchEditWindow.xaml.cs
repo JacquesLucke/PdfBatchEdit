@@ -40,22 +40,19 @@ namespace PdfBatchEdit
             if (MessageBox.Show("Do you really want to reset the program?", "Confirm Dialog", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 data.Reset();
+                UpdatePreviewFromSelection();
             }
         }
 
         private void removeButton_Click(object sender, RoutedEventArgs e)
         {
+            if (filesListBox.SelectedItem == null) return;
+
             if (MessageBox.Show("Do you really want to remove the selected file?", "Confirm Dialog", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                List<BatchFile> itemsToRemove = new List<BatchFile>();
-                foreach (BatchFile batchFile in filesListBox.SelectedItems)
-                {
-                    itemsToRemove.Add(batchFile);
-                }
-                foreach (BatchFile batchFile in itemsToRemove)
-                {
-                    data.BatchFiles.Remove(batchFile);
-                }
+                BatchFile fileToRemove = (BatchFile)filesListBox.SelectedItem;
+                data.BatchFiles.Remove(fileToRemove);
+                UpdatePreviewFromSelection();
             }
         }
 
@@ -109,11 +106,25 @@ namespace PdfBatchEdit
 
         private void filesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count == 0) return;
-            BatchFile batchFile = (BatchFile)e.AddedItems[0];
+            UpdatePreviewFromSelection();
+        }
+
+        private void refreshPreviewButton_Click(object sender, RoutedEventArgs e)
+        {
+            UpdatePreviewFromSelection();
+        }
+
+        private void UpdatePreviewFromSelection()
+        {
+            if (filesListBox.SelectedItem == null)
+            {
+                pdfViewer.Source = null;
+                return;
+            }
+
+            BatchFile batchFile = (BatchFile)filesListBox.SelectedItem;
             GenericFile previewFile = batchFile.GeneratePreview();
             pdfViewer.Source = previewFile.Uri;
-            ((ListBox)sender).Focus();
         }
     }
 }
