@@ -12,7 +12,7 @@
             <RowDefinition Height="300" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
-        <xctk:ColorCanvas Name="colorCanvas" Grid.Row="0" Height="250" Background="White" BorderThickness="0" Margin="0,25" UsingAlphaChannel="False" />
+        <xctk:ColorCanvas Name="colorCanvas" Grid.Row="0" Height="250" Background="White" BorderThickness="0" Margin="0,25" />
         <Button Name="okButton" Content="OK" Click="okButton_Click" Margin="10,280,0,0" Grid.RowSpan="2" HorizontalAlignment="Left" Width="86" Height="26" VerticalAlignment="Top" />
         <Button Name="cancelButton" Content="Cancel" Click="cancelButton_Click" Margin="0,280,10,0" Grid.RowSpan="2" HorizontalAlignment="Right" Width="86" Height="26" VerticalAlignment="Top" />
     </Grid>
