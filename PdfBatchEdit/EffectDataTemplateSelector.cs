@@ -8,23 +8,23 @@ using System.Windows.Controls;
 
 namespace PdfBatchEdit
 {
-    public class EffectDataTemplateSelector : DataTemplateSelector
+    public class GlobalEffectSetttingsTemplateSelector : DataTemplateSelector
     {
-        public DataTemplate AddTextDataTemplate { get; set; }
+        public DataTemplate TextEffectTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            return AddTextDataTemplate;
+            return TextEffectTemplate;
         }
     }
 
-    public class EffectSettingsTemplateSelector : DataTemplateSelector
+    public class LocalEffectSettingsTemplateSelector : DataTemplateSelector
     {
-        public DataTemplate AddTextSettingsDataTemplate { get; set; }
+        public DataTemplate TextEffectTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            return AddTextSettingsDataTemplate;
+            return TextEffectTemplate;
         }
     }
 }

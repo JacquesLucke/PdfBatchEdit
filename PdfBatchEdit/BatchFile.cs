@@ -57,7 +57,7 @@ namespace PdfBatchEdit
         public PdfDocument ApplyEffects()
         {
             PdfDocument document = source.Load();
-            foreach (IPdfEffectLocalSettings effect in localSettings)
+            foreach (ILocalPdfEffectSettings effect in localSettings)
             {
                 effect.GetMainEffect().ApplyEffect(effect, document);
             }

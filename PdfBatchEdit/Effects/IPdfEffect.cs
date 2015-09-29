@@ -4,12 +4,12 @@ namespace PdfBatchEdit.Effects
 {
     interface IPdfEffect
     {
-        void ApplyEffect(IPdfEffectLocalSettings localData, PdfDocument document);
+        void ApplyEffect(ILocalPdfEffectSettings localData, PdfDocument document);
 
-        IPdfEffectLocalSettings GetLocalSettings();
+        ILocalPdfEffectSettings GetLocalSettings();
     }
 
-    interface IPdfEffectLocalSettings
+    interface ILocalPdfEffectSettings
     {
         IPdfEffect GetMainEffect();
     }

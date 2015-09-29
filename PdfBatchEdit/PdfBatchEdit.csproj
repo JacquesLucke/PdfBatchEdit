@@ -92,7 +92,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Effects\AddTextEffect.cs" />
+    <Compile Include="Effects\TextEffect.cs" />
     <Compile Include="BatchFile.cs" />
     <Compile Include="Converter\ColorToSolidBrushConverter.cs" />
     <Compile Include="ColorPickerDialog.xaml.cs">

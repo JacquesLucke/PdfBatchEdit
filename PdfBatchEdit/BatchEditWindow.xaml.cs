@@ -135,7 +135,7 @@ namespace PdfBatchEdit
 
         private void newTextEffectButton_Click(object sender, RoutedEventArgs e)
         {
-            data.AddEffectToAllFiles(new AddTextEffect("Example"));
+            data.AddEffectToAllFiles(new Effects.TextEffect("Example"));
         }
     }
 }

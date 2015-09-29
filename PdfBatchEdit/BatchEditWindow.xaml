@@ -15,7 +15,7 @@
         <localConverters:InverseBooleanConverter x:Key="inverseBooleanConverter" />
         <localConverters:ConvertBooleanToVisibility x:Key="convertBooleanToVisibility" />
 
-        <DataTemplate x:Key="AddTextDataTemplate">
+        <DataTemplate x:Key="TextEffectTemplate">
             <Grid Margin="1">
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -121,9 +121,9 @@
             </Grid>
         </DataTemplate>
 
-        <local:EffectDataTemplateSelector x:Key="effectTemplateSelector" AddTextDataTemplate="{StaticResource AddTextDataTemplate}" />
+        <local:GlobalEffectSetttingsTemplateSelector x:Key="effectTemplateSelector" TextEffectTemplate="{StaticResource TextEffectTemplate}" />
 
-        <DataTemplate x:Key="AddTextSettingsDataTemplate">
+        <DataTemplate x:Key="LocalTextSettingsDataTemplate">
             <Grid Margin="1">
                 <DockPanel Visibility="{Binding Path=LocalTextIsUsed, Converter={StaticResource convertBooleanToVisibility}}">
                     <Label Width="70"
@@ -133,7 +133,7 @@
                 </DockPanel>
             </Grid>
         </DataTemplate>
-        <local:EffectSettingsTemplateSelector x:Key="effectSettingsTemplateSelector" AddTextSettingsDataTemplate="{StaticResource AddTextSettingsDataTemplate}" />
+        <local:LocalEffectSettingsTemplateSelector x:Key="effectSettingsTemplateSelector" TextEffectTemplate="{StaticResource LocalTextSettingsDataTemplate}" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
