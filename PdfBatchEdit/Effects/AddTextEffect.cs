@@ -97,6 +97,16 @@ namespace PdfBatchEdit.Effects
             }
         }
 
+        public PagesType Pages
+        {
+            get { return pages; }
+            set
+            {
+                pages = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public IPdfEffectLocalSettings GetLocalSettings()
         {
             AddTextEffectLocalSettings settings = new AddTextEffectLocalSettings(this);
@@ -203,7 +213,9 @@ namespace PdfBatchEdit.Effects
 
     public enum PagesType
     {
+        [Description("First Page Only")]
         First,
+        [Description("All Pages")]
         All
     }
 }
