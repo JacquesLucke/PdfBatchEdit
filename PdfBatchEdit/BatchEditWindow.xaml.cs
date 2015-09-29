@@ -21,7 +21,6 @@ namespace PdfBatchEdit
             filesListBox.DataContext = data.BatchFiles;
             effectsListBox.DataContext = data.Effects;
             data.AddEffectToAllFiles(new AddTextEffect("Hello World"));
-
         }
 
         private void newSourceFilesButton_Click(object sender, RoutedEventArgs e)
@@ -101,6 +100,12 @@ namespace PdfBatchEdit
                 }
                 
             }
+        }
+
+        private void pickTextColorButton_Click(object sender, RoutedEventArgs e)
+        {
+            ColorPickerDialog cpd = new ColorPickerDialog();
+            cpd.ShowDialog();
         }
     }
 }

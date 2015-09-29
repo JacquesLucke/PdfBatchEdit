@@ -14,6 +14,7 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBox Text="{Binding Path=Text}" Grid.Row="0" />
                 <DockPanel Grid.Row="1">
@@ -31,6 +32,7 @@
                     <Slider Value="{Binding Path=FontSize}" Width="240"  Minimum="1" Maximum="100" SmallChange="0.01" LargeChange="0.1" />
                     <TextBox Text="{Binding Path=FontSize, StringFormat=N1}" Width="50" />
                 </DockPanel>
+                <Button Name="pickTextColorButton" Grid.Row="4" Click="pickTextColorButton_Click" Content="Pick Color" />
             </Grid>
         </DataTemplate>
         <local:EffectDataTemplateSelector x:Key="effectTemplateSelector" AddTextDataTemplate="{StaticResource AddTextDataTemplate}" />
