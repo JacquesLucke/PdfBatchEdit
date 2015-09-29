@@ -8,6 +8,8 @@
         Title="Pdf Batch Edit" Height="700" Width="800" Closed="Window_Closed">
     <Window.Resources>
         <local:ColorToSolidBrushConverter x:Key="colorBrushConverter" />
+        <local:InverseBooleanConverter x:Key="inverseBooleanConverter" />
+        <local:ConvertBooleanToVisibility x:Key="convertBooleanToVisibility" />
         
         <DataTemplate x:Key="AddTextDataTemplate">
             <Grid Margin="1">
@@ -20,7 +22,7 @@
                 </Grid.RowDefinitions>
                 <DockPanel Grid.Row="0">
                     <Label Content="Text" Width="70" />
-                    <TextBox Text="{Binding Path=Text}" Width="180" />
+                    <TextBox Text="{Binding Path=Text}" Width="180" IsEnabled="{Binding UseLocalTexts, Converter={StaticResource inverseBooleanConverter}}" />
                     <CheckBox IsChecked="{Binding Path=UseLocalTexts}" Content="Use Local Texts" Margin="5,0,0,0" VerticalAlignment="Center" />
                 </DockPanel>
                 <DockPanel Grid.Row="1">
@@ -49,7 +51,10 @@
 
         <DataTemplate x:Key="AddTextSettingsDataTemplate">
             <Grid Margin="1">
-                <TextBox Text="{Binding Path=Text}" Visibility="{Binding Path=LocalTextIsUsed}" />
+                <DockPanel Visibility="{Binding Path=LocalTextIsUsed, Converter={StaticResource convertBooleanToVisibility}}">
+                    <Label Content="Text" Width="70" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding Path=Text}" />
+                </DockPanel>
             </Grid>
         </DataTemplate>
         <local:EffectSettingsTemplateSelector x:Key="effectSettingsTemplateSelector" AddTextSettingsDataTemplate="{StaticResource AddTextSettingsDataTemplate}" />

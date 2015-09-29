@@ -98,9 +98,11 @@
     <Compile Include="ColorPickerDialog.xaml.cs">
       <DependentUpon>ColorPickerDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ConvertBooleanToVisibility.cs" />
     <Compile Include="EffectDataTemplateSelector.cs" />
     <Compile Include="GenericFile.cs" />
     <Compile Include="IBatchFilesGenerator.cs" />
+    <Compile Include="InverseBooleanConverter.cs" />
     <Compile Include="IPdfEffect.cs" />
     <Compile Include="LoadFilesFromDatabase.cs" />
     <Compile Include="LocalSettingsCollection.cs" />

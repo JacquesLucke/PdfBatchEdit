@@ -2,10 +2,12 @@
 using PdfSharp.Pdf;
 using System.Collections.Generic;
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace PdfBatchEdit
 {
-    class AddTextEffect : IPdfEffect
+    class AddTextEffect : IPdfEffect, INotifyPropertyChanged
     {
         private string text = "";
         private bool useLocalTexts = false;
@@ -16,6 +18,17 @@ namespace PdfBatchEdit
         private PagesType pages = PagesType.First;
         private double fontSize = 12;
         private XColor fontColor = XColors.Red;
+        private List<AddTextEffectLocalSettings> localSettingsObjects = new List<AddTextEffectLocalSettings>();
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            if(PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 
         public AddTextEffect(string text)
         {
@@ -31,7 +44,12 @@ namespace PdfBatchEdit
         public bool UseLocalTexts
         {
             get { return useLocalTexts; }
-            set { useLocalTexts = value; }
+            set {
+                useLocalTexts = value;
+                NotifyPropertyChanged();
+                foreach (AddTextEffectLocalSettings settings in localSettingsObjects)
+                    settings.UseLocalTextChanged();
+            }
         }
 
         public double RelativeX
@@ -60,7 +78,9 @@ namespace PdfBatchEdit
 
         public IPdfEffectLocalSettings GetLocalSettings()
         {
-            return new AddTextEffectLocalSettings(this);
+            AddTextEffectLocalSettings settings = new AddTextEffectLocalSettings(this);
+            this.localSettingsObjects.Add(settings);
+            return settings;
         }
 
         public void ApplyEffect(IPdfEffectLocalSettings localDataObject, PdfDocument document)
@@ -108,10 +128,12 @@ namespace PdfBatchEdit
         }
     }
 
-    class AddTextEffectLocalSettings : IPdfEffectLocalSettings
+    class AddTextEffectLocalSettings : IPdfEffectLocalSettings, INotifyPropertyChanged
     {
         private AddTextEffect main;
         private string text = "";
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public AddTextEffectLocalSettings(AddTextEffect main, string text = "")
         {
@@ -133,6 +155,14 @@ namespace PdfBatchEdit
         public bool LocalTextIsUsed
         {
             get { return main.UseLocalTexts; }
+        }
+
+        public void UseLocalTextChanged()
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs("LocalTextIsUsed"));
+            }
         }
     }
 
