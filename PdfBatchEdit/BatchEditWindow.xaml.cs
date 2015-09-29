@@ -35,13 +35,6 @@ namespace PdfBatchEdit
             }
         }
 
-        private void previewFile_Click(object sender, RoutedEventArgs e)
-        {
-            BatchFile batchFile = (BatchFile)((Button)e.Source).DataContext;
-            GenericFile previewFile = batchFile.GeneratePreview();
-            pdfViewer.Source = previewFile.Uri;
-        }
-
         private void resetButton_Click(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("Do you really want to reset the program?", "Confirm Dialog", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
@@ -52,7 +45,7 @@ namespace PdfBatchEdit
 
         private void removeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Do you really want to remove the selected files?", "Confirm Dialog", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Do you really want to remove the selected file?", "Confirm Dialog", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 List<BatchFile> itemsToRemove = new List<BatchFile>();
                 foreach (BatchFile batchFile in filesListBox.SelectedItems)
@@ -112,6 +105,15 @@ namespace PdfBatchEdit
             {
                 button.Background = new SolidColorBrush(cpd.SelectedColor);
             }
+        }
+
+        private void filesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count == 0) return;
+            BatchFile batchFile = (BatchFile)e.AddedItems[0];
+            GenericFile previewFile = batchFile.GeneratePreview();
+            pdfViewer.Source = previewFile.Uri;
+            ((ListBox)sender).Focus();
         }
     }
 }
