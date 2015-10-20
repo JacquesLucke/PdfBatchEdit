@@ -30,6 +30,15 @@ namespace PdfBatchEdit
             return source.Name;
         }
 
+        public ILocalPdfEffectSettings GetLocalSettingsForEffect(IPdfEffect effect)
+        {
+            foreach(ILocalPdfEffectSettings settings in localSettings)
+            {
+                if (settings.GetMainEffect() == effect) return settings;
+            }
+            return null;
+        }
+
         public GenericFile GeneratePreview()
         {
             GenericFile file = getNewPreviewFile();

@@ -106,12 +106,13 @@
     <Compile Include="IBatchFilesGenerator.cs" />
     <Compile Include="Converter\InverseBooleanConverter.cs" />
     <Compile Include="Effects\IPdfEffect.cs" />
-    <Compile Include="LoadFilesFromDatabase.cs" />
     <Compile Include="LocalSettingsCollection.cs" />
     <Compile Include="PdfEffects.cs" />
     <Compile Include="SourceFile.cs" />
     <Compile Include="BatchFiles.cs" />
     <Compile Include="TargetFile.cs" />
+    <Compile Include="Templates\ITemplate.cs" />
+    <Compile Include="Templates\ReadFromDataBaseTemplate.cs" />
     <Compile Include="Utils.cs" />
     <Page Include="BatchEditWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

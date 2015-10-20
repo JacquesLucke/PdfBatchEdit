@@ -21,7 +21,7 @@ namespace PdfBatchEdit
             }
         }
 
-        public void AddFileWithAllEffects(string path)
+        public BatchFile AddFileWithAllEffects(string path)
         {
             BatchFile file = new BatchFile(path);
             batchFiles.Add(file);
@@ -29,6 +29,7 @@ namespace PdfBatchEdit
             {
                 file.LocalEffectSettings.Add(effect.GetLocalSettings());
             }
+            return file;
         }
 
         public BatchFiles BatchFiles

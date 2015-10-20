@@ -1,14 +1,10 @@
 ﻿using Microsoft.Win32;
-using PdfBatchEdit.Effects;
 using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Threading;
 using Forms = System.Windows.Forms;
+using PdfBatchEdit.Templates;
 
 namespace PdfBatchEdit
 {
@@ -22,6 +18,7 @@ namespace PdfBatchEdit
             data = new PdfBatchEditData();
             filesListBox.DataContext = data.BatchFiles;
             effectsListBox.DataContext = data.Effects;
+            new ReadFromDataBaseTemplate().Execute(data);
         }
 
         private void newSourceFilesButton_Click(object sender, RoutedEventArgs e)

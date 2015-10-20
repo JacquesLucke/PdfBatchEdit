@@ -149,6 +149,7 @@
             </Grid.RowDefinitions>
             <Button x:Name="exportButton"
                     Width="75"
+                    Height="22"
                     Margin="75,21,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
