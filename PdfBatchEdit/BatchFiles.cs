@@ -3,7 +3,7 @@ using System.IO;
 
 namespace PdfBatchEdit
 {
-    class BatchFiles : ObservableCollection<BatchFile>
+    public class BatchFiles : ObservableCollection<BatchFile>
     {
         public void Export(string targetDirectory)
         {

@@ -3,13 +3,17 @@ using System.IO;
 
 namespace PdfBatchEdit
 {
-    class PdfBatchEditData
+    public class PdfBatchEditData
     {
         private BatchFiles batchFiles = new BatchFiles();
         private PdfEffects effects = new PdfEffects();
+        private AddonManager addonManager;
 
         public PdfBatchEditData()
-        {
+        {   
+            addonManager = new AddonManager(this);
+            addonManager.LoadAddons();
+            addonManager.ExecuteAddons();
         }
 
         public void AddEffectToAllFiles(IPdfEffect effect)

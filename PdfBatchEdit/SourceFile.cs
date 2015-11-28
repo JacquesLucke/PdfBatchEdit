@@ -3,7 +3,7 @@ using PdfSharp.Pdf.IO;
 
 namespace PdfBatchEdit
 {
-    class SourceFile : GenericFile
+    public class SourceFile : GenericFile
     {
         public SourceFile(string path) : base(path) { }
 

@@ -4,7 +4,7 @@ using System;
 
 namespace PdfBatchEdit
 {
-    class BatchFile
+    public class BatchFile
     {
         private SourceFile source;
         private LocalSettingsCollection localSettings;

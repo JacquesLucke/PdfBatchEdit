@@ -12,10 +12,13 @@ namespace PdfBatchEdit.Templates
     {
         public void Execute(PdfBatchEditData data)
         {
+            /*
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length != 3) return;
             if (args[1] != "-argument") return;
             string argument = args[2];
+            */
+            string argument = "105";
             
             string templateFilePath = Path.Combine(Utils.MainDirectory, "templates", "db_access.txt");
             if (!File.Exists(templateFilePath))
@@ -81,6 +84,16 @@ namespace PdfBatchEdit.Templates
             try {
                 OleDbConnection connection = new OleDbConnection(accessString);
                 connection.Open();
+
+
+                string[] restrictions = new string[4];
+                restrictions[3] = "Table";
+                DataTable userTables = connection.GetSchema("Tables", restrictions);
+                foreach(DataRow row in userTables.Rows)
+                {
+                    Console.WriteLine(row[2].ToString());
+                }
+
 
                 OleDbCommand accessCommand = new OleDbCommand(sql, connection);
                 OleDbDataAdapter dataAdapter = new OleDbDataAdapter(accessCommand);

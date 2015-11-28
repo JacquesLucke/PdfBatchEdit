@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace PdfBatchEdit.Effects
 {
-    class TextEffect : IPdfEffect, INotifyPropertyChanged
+    public class TextEffect : IPdfEffect, INotifyPropertyChanged
     {
         private string text = "";
         private bool useLocalTexts = false;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PdfBatchEdit
 {
-    class LocalSettingsCollection : ObservableCollection<ILocalPdfEffectSettings>
+    public class LocalSettingsCollection : ObservableCollection<ILocalPdfEffectSettings>
     {
     }
 }

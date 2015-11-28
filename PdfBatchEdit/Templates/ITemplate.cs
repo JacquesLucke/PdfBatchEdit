@@ -1,6 +1,6 @@
 ﻿namespace PdfBatchEdit.Templates
 {
-    interface ITemplate
+    public interface ITemplate
     {
         void Execute(PdfBatchEditData data);
     }

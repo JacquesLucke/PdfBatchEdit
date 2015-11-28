@@ -2,7 +2,7 @@
 
 namespace PdfBatchEdit
 {
-    interface IBatchFilesGenerator
+    public interface IBatchFilesGenerator
     {
         List<BatchFile> LoadBatchFiles();
     }

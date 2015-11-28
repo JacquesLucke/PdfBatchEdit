@@ -2,7 +2,7 @@
 
 namespace PdfBatchEdit
 {
-    class Utils
+    public class Utils
     {
         public static string MainDirectory
         {

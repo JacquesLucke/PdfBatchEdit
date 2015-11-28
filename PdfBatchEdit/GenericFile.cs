@@ -2,7 +2,7 @@
 
 namespace PdfBatchEdit
 {
-    class GenericFile
+    public class GenericFile
     {
         private string path;
 

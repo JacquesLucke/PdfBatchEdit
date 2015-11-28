@@ -18,7 +18,6 @@ namespace PdfBatchEdit
             data = new PdfBatchEditData();
             filesListBox.DataContext = data.BatchFiles;
             effectsListBox.DataContext = data.Effects;
-            new ReadFromDataBaseTemplate().Execute(data);
         }
 
         private void newSourceFilesButton_Click(object sender, RoutedEventArgs e)

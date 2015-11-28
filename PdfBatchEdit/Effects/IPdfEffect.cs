@@ -2,14 +2,14 @@
 
 namespace PdfBatchEdit.Effects
 {
-    interface IPdfEffect
+    public interface IPdfEffect
     {
         void ApplyEffect(ILocalPdfEffectSettings localData, PdfDocument document);
 
         ILocalPdfEffectSettings GetLocalSettings();
     }
 
-    interface ILocalPdfEffectSettings
+    public interface ILocalPdfEffectSettings
     {
         IPdfEffect GetMainEffect();
     }
