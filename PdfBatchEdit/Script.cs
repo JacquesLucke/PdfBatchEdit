@@ -3,14 +3,14 @@ using Microsoft.Scripting.Hosting;
 
 namespace PdfBatchEdit
 {
-    public class Addon
+    public class Script
     {
         string path;
         string name;
         ScriptSource source;
         CompiledCode compiledCode;
 
-        public Addon(ScriptEngine engine, string path)
+        public Script(ScriptEngine engine, string path)
         {
             this.path = path;
             name = Path.GetFileNameWithoutExtension(path);

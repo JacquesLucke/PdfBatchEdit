@@ -9,13 +9,13 @@ using Microsoft.Scripting.Hosting;
 
 namespace PdfBatchEdit
 {
-    public class AddonManager
+    public class ScriptManager
     {
         private ScriptEngine engine;
         public bool isSetup { get; }
-        Dictionary<string, Addon> addons = new Dictionary<string, Addon>();
+        Dictionary<string, Script> scripts = new Dictionary<string, Script>();
 
-        public AddonManager(PdfBatchEditData data)
+        public ScriptManager(PdfBatchEditData data)
         {
             try
             {
@@ -37,16 +37,16 @@ namespace PdfBatchEdit
             compiled.Execute(apiScope);
         }
 
-        public void LoadAddons()
+        public void LoadScripts()
         {
-            addons = new Dictionary<string, Addon>();
-            foreach (string path in Directory.GetFiles(AddonsDirectoryPath))
+            scripts = new Dictionary<string, Script>();
+            foreach (string path in Directory.GetFiles(ScriptsDirectoryPath))
             {
                 try
                 {
-                    Addon addon = new Addon(engine, path);
-                    addons[addon.Name] = addon;
-                    Console.WriteLine("Loaded addon: {0}", addon.Name);
+                    Script script = new Script(engine, path);
+                    scripts[script.Name] = script;
+                    Console.WriteLine("Loaded addon: {0}", script.Name);
                 }
                 catch
                 {
@@ -55,17 +55,17 @@ namespace PdfBatchEdit
             }
         }
 
-        public void ExecuteAddons()
+        public void ExecuteScripts()
         {
-            foreach (Addon addon in addons.Values)
+            foreach (Script addon in scripts.Values)
             {
                 addon.Execute();
             }
         }
 
-        public string AddonsDirectoryPath
+        public string ScriptsDirectoryPath
         {
-            get { return Path.Combine(Utils.MainDirectory, "addons"); }
+            get { return Path.Combine(Utils.MainDirectory, "scripts"); }
         }
 
         private string ApiFilePath

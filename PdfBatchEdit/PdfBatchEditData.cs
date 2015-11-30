@@ -7,13 +7,13 @@ namespace PdfBatchEdit
     {
         private BatchFiles batchFiles = new BatchFiles();
         private PdfEffects effects = new PdfEffects();
-        private AddonManager addonManager;
+        private ScriptManager scriptManager;
 
         public PdfBatchEditData()
         {   
-            addonManager = new AddonManager(this);
-            addonManager.LoadAddons();
-            addonManager.ExecuteAddons();
+            scriptManager = new ScriptManager(this);
+            scriptManager.LoadScripts();
+            scriptManager.ExecuteScripts();
         }
 
         public void AddEffectToAllFiles(IPdfEffect effect)
