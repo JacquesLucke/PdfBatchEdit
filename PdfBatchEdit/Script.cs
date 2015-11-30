@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Microsoft.Scripting.Hosting;
+using System;
 
 namespace PdfBatchEdit
 {
@@ -20,7 +21,15 @@ namespace PdfBatchEdit
 
         public void Execute()
         {
-            compiledCode.Execute();
+            try
+            {
+                compiledCode.Execute();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception during execution of the '{0}' script:", name);
+                Console.WriteLine("\t{0}", e.Message);
+            }
         }
 
         public string Name

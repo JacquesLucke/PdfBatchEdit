@@ -31,7 +31,7 @@ namespace PdfBatchEdit
 
         private void SetupAPI(PdfBatchEditData data)
         {
-            ScriptScope apiScope = engine.CreateModule("PdfBatchEditAPI");
+            ScriptScope apiScope = engine.CreateModule("pbe");
             CompiledCode compiled = CompileFile(ApiFilePath);
             apiScope.SetVariable("currentData", data);
             compiled.Execute(apiScope);
@@ -40,26 +40,36 @@ namespace PdfBatchEdit
         public void LoadScripts()
         {
             scripts = new Dictionary<string, Script>();
+            EnsureScriptsDirectory();
             foreach (string path in Directory.GetFiles(ScriptsDirectoryPath))
             {
                 try
                 {
                     Script script = new Script(engine, path);
                     scripts[script.Name] = script;
-                    Console.WriteLine("Loaded addon: {0}", script.Name);
+                    Console.WriteLine("Loaded script: {0}", script.Name);
                 }
-                catch
+                catch (Exception e)
                 {
-                    Console.WriteLine("Couldn't load addon: {0}", Path.GetFileName(path));
+                    Console.WriteLine("Couldn't load script: {0}", Path.GetFileName(path));
+                    Console.WriteLine("\t{0}", e.Message);
                 }
             }
         }
 
         public void ExecuteScripts()
         {
-            foreach (Script addon in scripts.Values)
+            foreach (Script script in scripts.Values)
             {
-                addon.Execute();
+                script.Execute();
+            }
+        }
+
+        public void EnsureScriptsDirectory()
+        {
+            if (!Directory.Exists(ScriptsDirectoryPath))
+            {
+                Directory.CreateDirectory(ScriptsDirectoryPath);
             }
         }
 

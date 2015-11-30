@@ -4,8 +4,10 @@ from PdfBatchEdit.Effects import TextEffect
 
 data = currentData
 
-def newTextEffect():
-    print "look"
+def NewTextEffect():
     textEffect = TextEffect("")
     data.AddEffectToAllFiles(textEffect)
     return textEffect
+
+def LoadFile(path):
+    return data.AddFileWithAllEffects(path);
