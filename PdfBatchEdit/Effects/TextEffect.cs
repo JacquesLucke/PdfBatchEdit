@@ -179,7 +179,7 @@ namespace PdfBatchEdit.Effects
         }
     }
 
-    class LocalTextEffectSettings : ILocalPdfEffectSettings, INotifyPropertyChanged
+    public class LocalTextEffectSettings : ILocalPdfEffectSettings, INotifyPropertyChanged
     {
         private TextEffect main;
         private string text = "";
