@@ -31,7 +31,7 @@ namespace PdfBatchEdit
 
         private void SetupAPI(PdfBatchEditData data)
         {
-            ScriptScope apiScope = engine.CreateModule("pbe");
+            ScriptScope apiScope = engine.CreateModule("pdfedit");
             CompiledCode compiled = CompileFile(ApiFilePath);
             apiScope.SetVariable("currentData", data);
             compiled.Execute(apiScope);
