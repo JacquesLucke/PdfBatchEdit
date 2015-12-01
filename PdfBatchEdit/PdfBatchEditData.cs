@@ -59,6 +59,7 @@ namespace PdfBatchEdit
         private void RemovePreviewFiles()
         {
             string directoryPath = Utils.MainDirectory + "previews\\";
+            if (!Directory.Exists(directoryPath)) return;
             foreach (string path in Directory.GetFiles(directoryPath))
             {
                 try { File.Delete(path); }
