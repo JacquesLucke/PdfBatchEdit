@@ -128,6 +128,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="PdfLoader.cs" />
     <Compile Include="Script.cs" />
     <Compile Include="ScriptManager.cs" />
     <Compile Include="Effects\TextEffect.cs" />
