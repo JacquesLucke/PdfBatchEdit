@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace PdfBatchEdit
 {
@@ -20,6 +21,26 @@ namespace PdfBatchEdit
                 randomString += chars[random.Next(chars.Length)];
             }
             return randomString;
+        }
+
+        public static Dictionary<string, string> GetArgumentsDictionary()
+        {
+            string[] args = Environment.GetCommandLineArgs();
+            var argsDict = new Dictionary<string, string>();
+            argsDict["path"] = args[0];
+
+            string currentArgumentName = null;
+            foreach (string argument in args)
+            {
+                if (argument.StartsWith("-"))
+                    currentArgumentName = argument;
+                else if (currentArgumentName == null)
+                    Console.WriteLine("The command line argument has a wrong format.");
+                else
+                    argsDict[currentArgumentName] = argument;
+            }
+
+            return argsDict;
         }
     }
 }

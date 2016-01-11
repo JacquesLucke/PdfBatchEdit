@@ -65,6 +65,14 @@ namespace PdfBatchEdit
             }
         }
 
+        public void ExecuteScript(string name)
+        {
+            if (scripts.ContainsKey(name))
+            {
+                scripts[name].Execute();
+            }
+        }
+
         public void EnsureScriptsDirectory()
         {
             if (!Directory.Exists(ScriptsDirectoryPath))

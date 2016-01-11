@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Forms = System.Windows.Forms;
 using PdfBatchEdit.Templates;
+using System.Collections.Generic;
 
 namespace PdfBatchEdit
 {
@@ -18,6 +19,8 @@ namespace PdfBatchEdit
             data = new PdfBatchEditData();
             filesListBox.DataContext = data.BatchFiles;
             effectsListBox.DataContext = data.Effects;
+
+            Dictionary<string, string> args = Utils.GetArgumentsDictionary();
         }
 
         private void newSourceFilesButton_Click(object sender, RoutedEventArgs e)
