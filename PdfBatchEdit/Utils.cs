@@ -30,8 +30,8 @@ namespace PdfBatchEdit
             argsDict["path"] = args[0];
 
             string currentArgumentName = null;
-            foreach (string argument in args)
-            {
+            for (int i = 1; i < args.Length; i++) {
+                string argument = args[i];
                 if (argument.StartsWith("-"))
                     currentArgumentName = argument;
                 else if (currentArgumentName == null)
@@ -42,5 +42,5 @@ namespace PdfBatchEdit
 
             return argsDict;
         }
-    }
+    } 
 }
