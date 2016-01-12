@@ -71,6 +71,10 @@ namespace PdfBatchEdit
             {
                 scripts[name].Execute();
             }
+            else
+            {
+                Console.WriteLine($"Script '{name}' not found");
+            }
         }
 
         public void EnsureScriptsDirectory()

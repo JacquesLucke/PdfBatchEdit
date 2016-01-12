@@ -1,15 +1,15 @@
 ﻿import clr
-clr.AddReference("PdfBatchEdit")
 clr.AddReference("System")
+clr.AddReference("PdfBatchEdit")
+
 import System
+import PdfBatchEdit
 from PdfBatchEdit.Effects import TextEffect
-from PdfBatchEdit import 
 
 data = currentData
 
 def GetArguments():
-
-	return argsDict
+	return PdfBatchEdit.Utils.GetArgumentsDictionary()
 
 def NewTextEffect():
     textEffect = TextEffect("")

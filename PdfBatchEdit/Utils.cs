@@ -33,7 +33,7 @@ namespace PdfBatchEdit
             for (int i = 1; i < args.Length; i++) {
                 string argument = args[i];
                 if (argument.StartsWith("-"))
-                    currentArgumentName = argument;
+                    currentArgumentName = argument.Substring(1);
                 else if (currentArgumentName == null)
                     Console.WriteLine("The command line argument has a wrong format.");
                 else

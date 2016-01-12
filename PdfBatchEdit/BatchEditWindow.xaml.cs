@@ -21,6 +21,10 @@ namespace PdfBatchEdit
             effectsListBox.DataContext = data.Effects;
 
             Dictionary<string, string> args = Utils.GetArgumentsDictionary();
+            if (args.ContainsKey("script"))
+            {
+                data.ExecuteScript(args["script"]);
+            }
         }
 
         private void newSourceFilesButton_Click(object sender, RoutedEventArgs e)

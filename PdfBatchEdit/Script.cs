@@ -23,11 +23,24 @@ namespace PdfBatchEdit
         {
             try
             {
-                compiledCode.Execute();
+                ScriptScope scope = source.Engine.CreateScope();
+                compiledCode.Execute(scope);
+                dynamic executeFunction;
+                bool executeFunctionExists = scope.TryGetVariable("Execute", out executeFunction);
+                if (executeFunctionExists)
+                {
+                    executeFunction(Utils.GetArgumentsDictionary());
+                    Console.WriteLine($"Executed script: '{name}'");
+                }
+                else
+                {
+                    Console.WriteLine("The script has to have a 'Execute(args)' function");
+                }
+                
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception during execution of the '{0}' script:", name);
+                Console.WriteLine($"Exception during execution of the '{name}' script:");
                 Console.WriteLine("\t{0}", e.Message);
             }
         }

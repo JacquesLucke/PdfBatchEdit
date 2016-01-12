@@ -13,7 +13,6 @@ namespace PdfBatchEdit
         {   
             scriptManager = new ScriptManager(this);
             scriptManager.LoadScripts();
-            scriptManager.ExecuteScripts();
         }
 
         public void AddEffectToAllFiles(IPdfEffect effect)
@@ -65,6 +64,11 @@ namespace PdfBatchEdit
                 try { File.Delete(path); }
                 catch { }   
             }
+        }
+
+        public void ExecuteScript(string name)
+        {
+            scriptManager.ExecuteScript(name);
         }
     }
 }
