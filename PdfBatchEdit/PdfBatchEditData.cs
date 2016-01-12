@@ -7,12 +7,9 @@ namespace PdfBatchEdit
     {
         private BatchFiles batchFiles = new BatchFiles();
         private PdfEffects effects = new PdfEffects();
-        private ScriptManager scriptManager;
 
         public PdfBatchEditData()
         {   
-            scriptManager = new ScriptManager(this);
-            scriptManager.LoadScripts();
         }
 
         public void AddEffectToAllFiles(IPdfEffect effect)
@@ -64,11 +61,6 @@ namespace PdfBatchEdit
                 try { File.Delete(path); }
                 catch { }   
             }
-        }
-
-        public void ExecuteScript(string name)
-        {
-            scriptManager.ExecuteScript(name);
         }
     }
 }

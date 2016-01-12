@@ -8,57 +8,16 @@ using System.IO;
 
 namespace PdfBatchEdit.Templates
 {
-    class ReadFromDataBaseTemplate : ITemplate
+    class ReadFromDataBaseTemplate
     {
-        public void Execute(PdfBatchEditData data)
+        public static void Execute(PdfBatchEditData data, string dbAccessDataFileName)
         {
-            /*
-            string[] args = Environment.GetCommandLineArgs();
-            if (args.Length != 3) return;
-            if (args[1] != "-argument") return;
-            string argument = args[2];
-            */
-            string argument = "105";
-            
-            string templateFilePath = Path.Combine(Utils.MainDirectory, "templates", "db_access.txt");
-            if (!File.Exists(templateFilePath))
-            {
-                Console.WriteLine("templates\\db_access.txt file not found");
-                return;
-            }
-            string 
-                path = "",
-                tableName = "",
-                sql = "",
-                addressFieldName = "",
-                textFieldName = "";
+            string templateFilePath = Path.Combine(Utils.MainDirectory, "template_data", dbAccessDataFileName);
+            DBAccessData accessData = DBAccessData.FromFile(templateFilePath);
+            accessData.CustomizeSQLWithCommandLineArguments("ARGUMENT");
+            Console.WriteLine($"SQL Command:  {accessData.sql}");
 
-            foreach (string line in File.ReadLines(templateFilePath))
-            {
-                string[] split = line.Split(new char[] { '=' }, 2);
-                string id = split[0].Trim();
-                string value = split[1].Trim();
-
-                if (id == "PATH") path = value;
-                if (id == "SQL") sql = value;
-                if (id == "TABLE") tableName = value;
-                if (id == "ADDRESS_FIELD") addressFieldName = value;
-                if (id == "TEXT_FIELD") textFieldName = value;
-            }
-
-            if (path == "" || sql == "" || tableName == "" || addressFieldName == "" || textFieldName == "")
-            {
-                Console.WriteLine("Not all parameters in the db_access.txt files found.");
-                Console.WriteLine("Needs the parameters PATH, SQL, TABLE, ADDRESS_FIELD and TEXT_FIELD");
-                return;
-            }
-
-
-            sql = sql.Replace("{ARGUMENT}", argument);
-            Console.WriteLine(sql);
-
-            List<DBRecord> records = ReadDataBase(path, tableName, sql, addressFieldName, textFieldName);
-            records = CorrectMultifileRecords(records);
+            List<DBRecord> records = LoadAndCorrectData(accessData);
 
             TextEffect effect = new TextEffect("");
             effect.UseLocalTexts = true;
@@ -72,57 +31,56 @@ namespace PdfBatchEdit.Templates
 
             foreach(DBRecord record in records)
             {
-                BatchFile file = data.AddFileWithAllEffects(record.address);
+                BatchFile file = data.AddFileWithAllEffects(record.path);
                 LocalTextEffectSettings settings = (LocalTextEffectSettings)file.GetLocalSettingsForEffect(effect);
                 settings.Text = record.text;
             }
         }
 
-        private List<DBRecord> ReadDataBase(string path, string tableName, string sql, string addressFieldName, string textFieldName)
+        public static List<DBRecord> LoadAndCorrectData(DBAccessData accessData)
         {
-            string accessString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path;
-            try {
-                OleDbConnection connection = new OleDbConnection(accessString);
-                connection.Open();
-
-
-                string[] restrictions = new string[4];
-                restrictions[3] = "Table";
-                DataTable userTables = connection.GetSchema("Tables", restrictions);
-                foreach(DataRow row in userTables.Rows)
-                {
-                    Console.WriteLine(row[2].ToString());
-                }
-
-
-                OleDbCommand accessCommand = new OleDbCommand(sql, connection);
-                OleDbDataAdapter dataAdapter = new OleDbDataAdapter(accessCommand);
-
-                connection.Close();
-
-                DataSet dataSet = new DataSet();
-                dataAdapter.Fill(dataSet, tableName);
-
-
-                DataTable table = dataSet.Tables[tableName];
-                List<DBRecord> records = new List<DBRecord>();
-                foreach (DataRow row in table.Rows)
-                {
-                    string address = ExtractAddress((string)row[addressFieldName]);
-                    string text = Convert.ToString(row[textFieldName]);
-                    records.Add(new DBRecord(address, text));
-                }
-
-                return records;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return new List<DBRecord>();
-            }
+            List<DBRecord> records = ReadDataBase(accessData);
+            return CorrectMultifileRecords(records);
         }
 
-        private string ExtractAddress(string link)
+        private static List<DBRecord> ReadDataBase(DBAccessData accessData)
+        {
+            string accessString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + accessData.path;
+
+            OleDbConnection connection = new OleDbConnection(accessString);
+            connection.Open();
+            
+            string[] restrictions = new string[4];
+            restrictions[3] = "Table";
+            DataTable userTables = connection.GetSchema("Tables", restrictions);
+            foreach (DataRow row in userTables.Rows)
+            {
+                Console.WriteLine(row[2].ToString());
+            }
+
+
+            OleDbCommand accessCommand = new OleDbCommand(accessData.sql, connection);
+            OleDbDataAdapter dataAdapter = new OleDbDataAdapter(accessCommand);
+
+            connection.Close();
+
+            DataSet dataSet = new DataSet();
+            dataAdapter.Fill(dataSet, accessData.tableName);
+
+
+            DataTable table = dataSet.Tables[accessData.tableName];
+            List<DBRecord> records = new List<DBRecord>();
+            foreach (DataRow row in table.Rows)
+            {
+                string address = ExtractAddress((string)row[accessData.addressFieldName]);
+                string text = Convert.ToString(row[accessData.textFieldName]);
+                records.Add(new DBRecord(address, text));
+            }
+
+            return records;
+        }
+
+        private static string ExtractAddress(string link)
         {
             if (link.Length < 2) return String.Empty;
             if (link[0] == '#' && link[1] != '#')
@@ -138,16 +96,16 @@ namespace PdfBatchEdit.Templates
             return String.Empty;
         }
 
-        private List<DBRecord> CorrectMultifileRecords(List<DBRecord> sourceRecords)
+        private static List<DBRecord> CorrectMultifileRecords(List<DBRecord> sourceRecords)
         {
             Dictionary<string, List<string>> textsByPath = new Dictionary<string, List<string>>();
 
             foreach(DBRecord record in sourceRecords)
             {
-                if (!textsByPath.ContainsKey(record.address))
-                    textsByPath[record.address] = new List<string>();
+                if (!textsByPath.ContainsKey(record.path))
+                    textsByPath[record.path] = new List<string>();
 
-                textsByPath[record.address].Add(record.text);
+                textsByPath[record.path].Add(record.text);
             }
 
             List<DBRecord> records = new List<DBRecord>();
@@ -157,15 +115,86 @@ namespace PdfBatchEdit.Templates
             }
             return records;
         }
-        
-        struct DBRecord
+
+        public struct DBAccessData
         {
-            public string address;
+            public string path;
+            public string tableName;
+            public string sql;
+            public string addressFieldName;
+            public string textFieldName;
+
+            public DBAccessData(string path, string tableName, string sql, string addressFieldName, string textFieldName)
+            {
+                this.path = path;
+                this.tableName = tableName;
+                this.sql = sql;
+                this.addressFieldName = addressFieldName;
+                this.textFieldName = textFieldName;
+            }
+
+            public static DBAccessData FromFile(string accessDataFilepath)
+            {                
+                if (!File.Exists(accessDataFilepath))
+                {
+                    throw new Exception($"{accessDataFilepath} file not found");
+                }
+
+                Dictionary<string, string> data = ReadFileData(accessDataFilepath);
+
+                string path, tableName, sql, addressFieldName, textFieldName;
+
+                data.TryGetValue("PATH", out path);
+                data.TryGetValue("SQL", out sql);
+                data.TryGetValue("TABLE", out tableName);
+                data.TryGetValue("ADDRESS_FIELD", out addressFieldName);
+                data.TryGetValue("TEXT_FIELD", out textFieldName);
+
+                if (path == null || sql == null || tableName == null || addressFieldName == null || textFieldName == null)
+                {
+                    throw new Exception(String.Join(Environment.NewLine,
+                        "Missing parameters in the db_access.txt file.",
+                        "    Needs the parameters PATH, SQL, TABLE, ADDRESS_FIELD and TEXT_FIELD"));
+                }
+
+                return new DBAccessData(path, tableName, sql, addressFieldName, textFieldName);
+            }
+
+            private static Dictionary<string, string> ReadFileData(string filepath)
+            {
+                var dict = new Dictionary<string, string>();
+                foreach (string line in File.ReadLines(filepath))
+                {
+                    string[] split = line.Split(new char[] { '=' }, 2);
+                    string id = split[0].Trim();
+                    string value = split[1].Trim();
+
+                    dict[id] = value;
+                }
+                return dict;
+            }
+
+            public void CustomizeSQLWithCommandLineArguments(string prefix)
+            {
+                Dictionary<string, string> args = Utils.GetArgumentsDictionary();
+                foreach (string key in args.Keys)
+                {
+                    if (key.StartsWith(prefix))
+                    {
+                        sql = sql.Replace("{" + key + "}", args[key]);
+                    }
+                }
+            }
+        }
+
+        public struct DBRecord
+        {
+            public string path;
             public string text;
 
-            public DBRecord(string address, string text)
+            public DBRecord(string path, string text)
             {
-                this.address = address;
+                this.path = path;
                 this.text = text;
             }
         }

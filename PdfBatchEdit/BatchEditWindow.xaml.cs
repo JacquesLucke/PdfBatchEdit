@@ -20,10 +20,22 @@ namespace PdfBatchEdit
             filesListBox.DataContext = data.BatchFiles;
             effectsListBox.DataContext = data.Effects;
 
+            ExecuteStartUpScript();
+        }
+
+        private void ExecuteStartUpScript()
+        {
             Dictionary<string, string> args = Utils.GetArgumentsDictionary();
             if (args.ContainsKey("script"))
             {
-                data.ExecuteScript(args["script"]);
+                try
+                {
+                    if (args["script"] == "basic_database_access") ReadFromDataBaseTemplate.Execute(data, "db_access.txt");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message + " <= " + e.Source);
+                }
             }
         }
 
