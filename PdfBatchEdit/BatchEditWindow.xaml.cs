@@ -30,7 +30,11 @@ namespace PdfBatchEdit
             {
                 try
                 {
-                    if (args["script"] == "basic_database_access") ReadFromDataBaseTemplate.Execute(data, "db_access.txt");
+                    if (args["script"] == "basic_db_access" && args.ContainsKey("access_data"))
+                    {
+                        ReadFromDataBaseTemplate.Execute(data, args["access_data"]);
+                        Console.WriteLine("No exceptions during template execution.");
+                    }
                 }
                 catch (Exception e)
                 {

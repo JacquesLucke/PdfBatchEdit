@@ -1,4 +1,4 @@
-﻿PATH = ‪C:\Users\Jacques Lucke\Desktop\test.accdb
+﻿PATH = C:\Users\lu\Desktop\Jacques\Silica_PDV_11.accdb
 SQL = SELECT Link, [Position] FROM StuecklisteWAZ WHERE Link is not null and ID_Dokument_Browser = {ARGUMENT}
 TABLE = StuecklisteWAZ
 ADDRESS_FIELD = Link

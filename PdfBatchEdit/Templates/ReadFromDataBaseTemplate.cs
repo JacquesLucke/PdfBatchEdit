@@ -15,7 +15,7 @@ namespace PdfBatchEdit.Templates
             string templateFilePath = Path.Combine(Utils.MainDirectory, "template_data", dbAccessDataFileName);
             DBAccessData accessData = DBAccessData.FromFile(templateFilePath);
             accessData.CustomizeSQLWithCommandLineArguments("ARGUMENT");
-            Console.WriteLine($"SQL Command:  {accessData.sql}");
+            Console.WriteLine(accessData);
 
             List<DBRecord> records = LoadAndCorrectData(accessData);
 
@@ -46,18 +46,8 @@ namespace PdfBatchEdit.Templates
         private static List<DBRecord> ReadDataBase(DBAccessData accessData)
         {
             string accessString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + accessData.path;
-
             OleDbConnection connection = new OleDbConnection(accessString);
             connection.Open();
-            
-            string[] restrictions = new string[4];
-            restrictions[3] = "Table";
-            DataTable userTables = connection.GetSchema("Tables", restrictions);
-            foreach (DataRow row in userTables.Rows)
-            {
-                Console.WriteLine(row[2].ToString());
-            }
-
 
             OleDbCommand accessCommand = new OleDbCommand(accessData.sql, connection);
             OleDbDataAdapter dataAdapter = new OleDbDataAdapter(accessCommand);
@@ -67,7 +57,6 @@ namespace PdfBatchEdit.Templates
             DataSet dataSet = new DataSet();
             dataAdapter.Fill(dataSet, accessData.tableName);
 
-
             DataTable table = dataSet.Tables[accessData.tableName];
             List<DBRecord> records = new List<DBRecord>();
             foreach (DataRow row in table.Rows)
@@ -76,6 +65,7 @@ namespace PdfBatchEdit.Templates
                 string text = Convert.ToString(row[accessData.textFieldName]);
                 records.Add(new DBRecord(address, text));
             }
+
 
             return records;
         }
@@ -131,6 +121,16 @@ namespace PdfBatchEdit.Templates
                 this.sql = sql;
                 this.addressFieldName = addressFieldName;
                 this.textFieldName = textFieldName;
+            }
+
+            public override string ToString()
+            {
+                return String.Join("\n",
+                    "Path:          " + path,
+                    "Table:         " + tableName,
+                    "SQL:           " + sql,
+                    "Address Field: " + addressFieldName,
+                    "Text Field:    " + textFieldName);
             }
 
             public static DBAccessData FromFile(string accessDataFilepath)
