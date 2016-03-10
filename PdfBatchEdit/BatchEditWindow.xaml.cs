@@ -26,6 +26,7 @@ namespace PdfBatchEdit
         private void ExecuteStartUpScript()
         {
             Dictionary<string, string> args = Utils.GetArgumentsDictionary();
+            
             if (args.ContainsKey("script"))
             {
                 try

@@ -13,6 +13,12 @@ namespace PdfBatchEdit.Templates
         public static void Execute(PdfBatchEditData data, string dbAccessDataFileName)
         {
             string templateFilePath = Path.Combine(Utils.MainDirectory, "template_data", dbAccessDataFileName);
+            if (!File.Exists(templateFilePath))
+            {
+                Console.WriteLine("Template file not found");
+                return;
+            }
+
             DBAccessData accessData = DBAccessData.FromFile(templateFilePath);
             accessData.CustomizeSQLWithCommandLineArguments("ARGUMENT");
             Console.WriteLine(accessData);
@@ -24,16 +30,23 @@ namespace PdfBatchEdit.Templates
             effect.FontColor = XColors.Black;
             effect.FontSize = 20;
             effect.VerticalAlignment = VerticalAlignment.Bottom;
-            effect.HorizontalAlignment = HorizontalAlignment.Left;
-            effect.RelativeX = 0.03;
-            effect.RelativeY = 0.95;
+            effect.HorizontalAlignment = HorizontalAlignment.Right;
+            effect.RelativeX = 0.96;
+            effect.RelativeY = 0.02;
             data.AddEffectToAllFiles(effect);
 
             foreach(DBRecord record in records)
             {
-                BatchFile file = data.AddFileWithAllEffects(record.path);
-                LocalTextEffectSettings settings = (LocalTextEffectSettings)file.GetLocalSettingsForEffect(effect);
-                settings.Text = record.text;
+                if (File.Exists(record.path))
+                {
+                    BatchFile file = data.AddFileWithAllEffects(record.path);
+                    LocalTextEffectSettings settings = (LocalTextEffectSettings)file.GetLocalSettingsForEffect(effect);
+                    settings.Text = "Pos. " + record.text;
+                }
+                else
+                {
+                    Console.WriteLine($"File {record.path} not found");
+                }
             }
         }
 
@@ -101,7 +114,7 @@ namespace PdfBatchEdit.Templates
             List<DBRecord> records = new List<DBRecord>();
             foreach(KeyValuePair<string, List<string>> item in textsByPath)
             {
-                records.Add(new DBRecord(item.Key, String.Join(", ", item.Value)));
+                records.Add(new DBRecord(item.Key, String.Join("/", item.Value)));
             }
             return records;
         }
@@ -142,20 +155,21 @@ namespace PdfBatchEdit.Templates
 
                 Dictionary<string, string> data = ReadFileData(accessDataFilepath);
 
-                string path, tableName, sql, addressFieldName, textFieldName;
+                string fileName, tableName, sql, addressFieldName, textFieldName;
 
-                data.TryGetValue("PATH", out path);
+                data.TryGetValue("PATH", out fileName);
                 data.TryGetValue("SQL", out sql);
                 data.TryGetValue("TABLE", out tableName);
                 data.TryGetValue("ADDRESS_FIELD", out addressFieldName);
                 data.TryGetValue("TEXT_FIELD", out textFieldName);
 
-                if (path == null || sql == null || tableName == null || addressFieldName == null || textFieldName == null)
+                if (fileName == null || sql == null || tableName == null || addressFieldName == null || textFieldName == null)
                 {
                     throw new Exception(String.Join(Environment.NewLine,
                         "Missing parameters in the db_access.txt file.",
                         "    Needs the parameters PATH, SQL, TABLE, ADDRESS_FIELD and TEXT_FIELD"));
                 }
+                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), fileName);
 
                 return new DBAccessData(path, tableName, sql, addressFieldName, textFieldName);
             }
