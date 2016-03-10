@@ -33,6 +33,7 @@ namespace PdfBatchEdit
                 {
                     if (args["script"] == "basic_db_access" && args.ContainsKey("access_data") && args.ContainsKey("db_path"))
                     {
+                        Console.WriteLine($"Path: '{args["db_path"]}'");
                         ReadFromDataBaseTemplate.Execute(data, args["db_path"], args["access_data"]);
                     }
                 }
