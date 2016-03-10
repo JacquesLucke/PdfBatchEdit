@@ -18,6 +18,7 @@ namespace PdfBatchEdit.Effects
         private PagesType pages = PagesType.First;
         private double fontSize = 12;
         private XColor fontColor = XColors.Red;
+        private bool useOrientation = false;
         private List<LocalTextEffectSettings> localSettingsObjects = new List<LocalTextEffectSettings>();
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -127,6 +128,16 @@ namespace PdfBatchEdit.Effects
             }
         }
 
+        public bool UseOrientation
+        {
+            get { return useOrientation; }
+            set
+            {
+                useOrientation = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public ILocalPdfEffectSettings GetLocalSettings()
         {
             LocalTextEffectSettings settings = new LocalTextEffectSettings(this);
@@ -155,27 +166,51 @@ namespace PdfBatchEdit.Effects
         private void WriteOnPage(PdfPage page, string drawText)
         {
             XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append);
-            XFont font = new XFont("Verdana", fontSize, XFontStyle.Regular);
-
-            XSize size = gfx.MeasureString(drawText, font);
-            XPoint position = new XPoint();
-            position.X = page.Width * relativeX;
-            position.Y = page.Height * relativeY;
-            position = CorrectPosition(position, size);
-
+            XFont font = new XFont("Verdana", fontSize, XFontStyle.Regular);            
             XSolidBrush brush = new XSolidBrush(fontColor);
 
+            XPoint position = CalculatePosition(page, gfx, font, drawText, relativeX, relativeY, horizontalAlignment, verticalAlignment);
+
+            if (ShouldHandleOrientation(page)) gfx.RotateAtTransform(90, position);
             gfx.DrawString(drawText, font, brush, position);
             gfx.Dispose();
         }
 
-        private XPoint CorrectPosition(XPoint position, XSize size)
+        private XPoint CalculatePosition(PdfPage page, XGraphics gfx, XFont font, string text, double relativeX, double relativeY, HorizontalAlignment horizontal, VerticalAlignment vertical)
         {
-            if (horizontalAlignment == HorizontalAlignment.Center) position.X -= size.Width / 2;
-            if (horizontalAlignment == HorizontalAlignment.Right) position.X -= size.Width;
-            if (verticalAlignment == VerticalAlignment.Center) position.Y += size.Height / 2;
-            if (verticalAlignment == VerticalAlignment.Top) position.Y += size.Height;
-            return position;
+            XSize size = gfx.MeasureString(text, font);
+
+            if (!ShouldHandleOrientation(page))
+            {
+                XPoint position = new XPoint();
+                position.X = page.Width * relativeX;
+                position.Y = page.Height * relativeY;
+
+                if (horizontal == HorizontalAlignment.Center) position.X -= size.Width / 2;
+                if (horizontal == HorizontalAlignment.Right) position.X -= size.Width;
+                if (vertical == VerticalAlignment.Center) position.Y += size.Height / 2;
+                if (vertical == VerticalAlignment.Top) position.Y += size.Height;
+
+                return position;
+            }
+            else
+            {
+                XPoint position = new XPoint();
+                position.X = page.Width * (1 - relativeY);
+                position.Y = page.Height * relativeX;
+                
+                if (horizontal == HorizontalAlignment.Center) position.Y -= size.Width / 2;
+                if (horizontal == HorizontalAlignment.Right) position.Y -= size.Width;
+                if (vertical == VerticalAlignment.Center) position.X -= size.Height / 2;
+                if (vertical == VerticalAlignment.Top) position.X -= size.Height;
+
+                return position;
+            }
+        }
+
+        private bool ShouldHandleOrientation(PdfPage page)
+        {
+            return useOrientation && page.Width > page.Height;
         }
     }
 

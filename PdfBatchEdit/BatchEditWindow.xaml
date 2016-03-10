@@ -107,6 +107,10 @@
                             Click="chooseColorButton_Click"
                             Focusable="False"
                             ToolTip="Click to change the color" />
+                    <CheckBox Margin="30,0,0,0"
+                              VerticalAlignment="Center"
+                              Content="Use Orientation"
+                              IsChecked="{Binding Path=UseOrientation}" Click="CheckBox_Click" />
                 </DockPanel>
                 <DockPanel Grid.Row="5" Margin="4,4,4,4">
                     <Label Width="70"

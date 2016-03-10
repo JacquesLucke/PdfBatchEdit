@@ -10,31 +10,40 @@ namespace PdfBatchEdit.Templates
 {
     class ReadFromDataBaseTemplate
     {
-        public static void Execute(PdfBatchEditData data, string dbAccessDataFileName)
+        public static void Execute(PdfBatchEditData data, string databasePath, string dbAccessDataFileName)
         {
+            if (!File.Exists(databasePath))
+            {
+                Console.WriteLine($"Database not found: '{databasePath}'");
+                return;
+            }
+
             string templateFilePath = Path.Combine(Utils.MainDirectory, "template_data", dbAccessDataFileName);
             if (!File.Exists(templateFilePath))
             {
-                Console.WriteLine("Template file not found");
+                Console.WriteLine($"Template file not found: '{templateFilePath}'");
                 return;
             }
 
             DBAccessData accessData = DBAccessData.FromFile(templateFilePath);
             accessData.CustomizeSQLWithCommandLineArguments("ARGUMENT");
             Console.WriteLine(accessData);
+            Console.WriteLine();
 
-            List<DBRecord> records = LoadAndCorrectData(accessData);
+            List<DBRecord> records = LoadAndCorrectData(databasePath, accessData);
 
             TextEffect effect = new TextEffect("");
             effect.UseLocalTexts = true;
             effect.FontColor = XColors.Black;
             effect.FontSize = 20;
-            effect.VerticalAlignment = VerticalAlignment.Bottom;
+            effect.VerticalAlignment = VerticalAlignment.Top;
             effect.HorizontalAlignment = HorizontalAlignment.Right;
             effect.RelativeX = 0.96;
-            effect.RelativeY = 0.02;
+            effect.RelativeY = 0.01;
+            effect.UseOrientation = true;
             data.AddEffectToAllFiles(effect);
 
+            int counter = 0;
             foreach(DBRecord record in records)
             {
                 if (File.Exists(record.path))
@@ -42,23 +51,26 @@ namespace PdfBatchEdit.Templates
                     BatchFile file = data.AddFileWithAllEffects(record.path);
                     LocalTextEffectSettings settings = (LocalTextEffectSettings)file.GetLocalSettingsForEffect(effect);
                     settings.Text = "Pos. " + record.text;
+                    counter++;
                 }
                 else
                 {
-                    Console.WriteLine($"File {record.path} not found");
+                    Console.WriteLine($"File '{record.path}' not found.");
                 }
             }
+
+            Console.WriteLine($"{counter} files loaded.");
         }
 
-        public static List<DBRecord> LoadAndCorrectData(DBAccessData accessData)
+        public static List<DBRecord> LoadAndCorrectData(string databasePath, DBAccessData accessData)
         {
-            List<DBRecord> records = ReadDataBase(accessData);
+            List<DBRecord> records = ReadDataBase(databasePath, accessData);
             return CorrectMultifileRecords(records);
         }
 
-        private static List<DBRecord> ReadDataBase(DBAccessData accessData)
+        private static List<DBRecord> ReadDataBase(string databasePath, DBAccessData accessData)
         {
-            string accessString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + accessData.path;
+            string accessString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + databasePath;
             OleDbConnection connection = new OleDbConnection(accessString);
             connection.Open();
 
@@ -72,10 +84,23 @@ namespace PdfBatchEdit.Templates
 
             DataTable table = dataSet.Tables[accessData.tableName];
             List<DBRecord> records = new List<DBRecord>();
+
+            if (!table.Columns.Contains(accessData.addressFieldName))
+                Console.WriteLine($"The table has no '{accessData.addressFieldName}' field.");
+
+            if (!table.Columns.Contains(accessData.textFieldName))
+                Console.WriteLine($"The table has no '{accessData.textFieldName}' field.");
+
             foreach (DataRow row in table.Rows)
             {
-                string address = ExtractAddress((string)row[accessData.addressFieldName]);
-                string text = Convert.ToString(row[accessData.textFieldName]);
+                string address = "";
+                if (table.Columns.Contains(accessData.addressFieldName))
+                    address = ExtractAddress(Convert.ToString(row[accessData.addressFieldName]));
+
+                string text = "";
+                if (table.Columns.Contains(accessData.textFieldName))
+                    text = Convert.ToString(row[accessData.textFieldName]);
+
                 records.Add(new DBRecord(address, text));
             }
 
@@ -121,15 +146,13 @@ namespace PdfBatchEdit.Templates
 
         public struct DBAccessData
         {
-            public string path;
             public string tableName;
             public string sql;
             public string addressFieldName;
             public string textFieldName;
 
-            public DBAccessData(string path, string tableName, string sql, string addressFieldName, string textFieldName)
+            public DBAccessData(string tableName, string sql, string addressFieldName, string textFieldName)
             {
-                this.path = path;
                 this.tableName = tableName;
                 this.sql = sql;
                 this.addressFieldName = addressFieldName;
@@ -139,7 +162,6 @@ namespace PdfBatchEdit.Templates
             public override string ToString()
             {
                 return String.Join("\n",
-                    "Path:          " + path,
                     "Table:         " + tableName,
                     "SQL:           " + sql,
                     "Address Field: " + addressFieldName,
@@ -155,23 +177,21 @@ namespace PdfBatchEdit.Templates
 
                 Dictionary<string, string> data = ReadFileData(accessDataFilepath);
 
-                string fileName, tableName, sql, addressFieldName, textFieldName;
-
-                data.TryGetValue("PATH", out fileName);
+                string tableName, sql, addressFieldName, textFieldName;
+                
                 data.TryGetValue("SQL", out sql);
                 data.TryGetValue("TABLE", out tableName);
                 data.TryGetValue("ADDRESS_FIELD", out addressFieldName);
                 data.TryGetValue("TEXT_FIELD", out textFieldName);
 
-                if (fileName == null || sql == null || tableName == null || addressFieldName == null || textFieldName == null)
+                if (sql == null || tableName == null || addressFieldName == null || textFieldName == null)
                 {
                     throw new Exception(String.Join(Environment.NewLine,
                         "Missing parameters in the db_access.txt file.",
-                        "    Needs the parameters PATH, SQL, TABLE, ADDRESS_FIELD and TEXT_FIELD"));
+                        "    Needs the parameters SQL, TABLE, ADDRESS_FIELD and TEXT_FIELD"));
                 }
-                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), fileName);
 
-                return new DBAccessData(path, tableName, sql, addressFieldName, textFieldName);
+                return new DBAccessData(tableName, sql, addressFieldName, textFieldName);
             }
 
             private static Dictionary<string, string> ReadFileData(string filepath)
@@ -181,7 +201,11 @@ namespace PdfBatchEdit.Templates
                 {
                     string[] split = line.Split(new char[] { '=' }, 2);
                     string id = split[0].Trim();
-                    string value = split[1].Trim();
+                    string value = "";
+                    if (split.Length == 2)
+                    {
+                        value = split[1].Trim();
+                    }
 
                     dict[id] = value;
                 }

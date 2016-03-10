@@ -31,10 +31,9 @@ namespace PdfBatchEdit
             {
                 try
                 {
-                    if (args["script"] == "basic_db_access" && args.ContainsKey("access_data"))
+                    if (args["script"] == "basic_db_access" && args.ContainsKey("access_data") && args.ContainsKey("db_path"))
                     {
-                        ReadFromDataBaseTemplate.Execute(data, args["access_data"]);
-                        Console.WriteLine("No exceptions during template execution.");
+                        ReadFromDataBaseTemplate.Execute(data, args["db_path"], args["access_data"]);
                     }
                 }
                 catch (Exception e)
@@ -156,6 +155,11 @@ namespace PdfBatchEdit
         private void newTextEffectButton_Click(object sender, RoutedEventArgs e)
         {
             data.AddEffectToAllFiles(new Effects.TextEffect("Example"));
+        }
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            UpdatePreviewFromSelection();
         }
     }
 }
