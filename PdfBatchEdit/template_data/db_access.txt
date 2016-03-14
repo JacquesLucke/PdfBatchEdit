@@ -2,3 +2,5 @@
 TABLE = StuecklisteWAZ
 ADDRESS_FIELD = Link
 TEXT_FIELD = Position
+TEXT_PREFIX = 'Pos. ' 
+USE_LOCAL_TEXTS = true

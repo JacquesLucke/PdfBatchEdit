@@ -34,7 +34,7 @@ namespace PdfBatchEdit.Templates
             batchFileDataList.Sort(BatchFileData.SortByNumber);
 
             TextEffect effect = new TextEffect("");
-            effect.UseLocalTexts = true;
+            effect.UseLocalTexts = accessData.useLocalTexts;
             effect.FontColor = XColors.Black;
             effect.FontSize = 20;
             effect.VerticalAlignment = VerticalAlignment.Top;
@@ -53,7 +53,7 @@ namespace PdfBatchEdit.Templates
                     int prefixNumber = batchFileData.GetLowestNumberInTexts();
                     file.OutputNamePrefix = Convert.ToString(prefixNumber).PadLeft(3, '0') + " ";
                     LocalTextEffectSettings settings = (LocalTextEffectSettings)file.GetLocalSettingsForEffect(effect);
-                    settings.Text = "Pos. " + batchFileData.CombinedText;
+                    settings.Text = accessData.textPrefix + batchFileData.CombinedText;
                     counter++;
                 }
                 else
@@ -157,22 +157,28 @@ namespace PdfBatchEdit.Templates
             public string sql;
             public string addressFieldName;
             public string textFieldName;
+            public string textPrefix;
+            public bool useLocalTexts;
 
-            public DBAccessData(string tableName, string sql, string addressFieldName, string textFieldName)
+            public DBAccessData(string tableName, string sql, string addressFieldName, string textFieldName, string textPrefix, bool useLocalTexts)
             {
                 this.tableName = tableName;
                 this.sql = sql;
                 this.addressFieldName = addressFieldName;
                 this.textFieldName = textFieldName;
+                this.textPrefix = textPrefix;
+                this.useLocalTexts = useLocalTexts;
             }
 
             public override string ToString()
             {
                 return String.Join("\n",
-                    "Table:         " + tableName,
-                    "SQL:           " + sql,
-                    "Address Field: " + addressFieldName,
-                    "Text Field:    " + textFieldName);
+                    "Table:           " + tableName,
+                    "SQL:             " + sql,
+                    "Address Field:   " + addressFieldName,
+                    "Text Field:      " + textFieldName,
+                    "Text Prefix:     '" + textPrefix + "'",
+                    "Use Local Texts: " + useLocalTexts);
             }
 
             public static DBAccessData FromFile(string accessDataFilepath)
@@ -184,21 +190,32 @@ namespace PdfBatchEdit.Templates
 
                 Dictionary<string, string> data = ReadFileData(accessDataFilepath);
 
-                string tableName, sql, addressFieldName, textFieldName;
+                string tableName, sql, addressFieldName, textFieldName, textPrefix, _useLocalTexts;
                 
                 data.TryGetValue("SQL", out sql);
                 data.TryGetValue("TABLE", out tableName);
                 data.TryGetValue("ADDRESS_FIELD", out addressFieldName);
                 data.TryGetValue("TEXT_FIELD", out textFieldName);
+                data.TryGetValue("TEXT_PREFIX", out textPrefix);
+                data.TryGetValue("USE_LOCAL_TEXTS", out _useLocalTexts);
 
-                if (sql == null || tableName == null || addressFieldName == null || textFieldName == null)
+                if (sql == null || tableName == null || addressFieldName == null || textFieldName == null || textPrefix == null || _useLocalTexts == null)
                 {
                     throw new Exception(String.Join(Environment.NewLine,
                         "Missing parameters in the db_access.txt file.",
-                        "    Needs the parameters SQL, TABLE, ADDRESS_FIELD and TEXT_FIELD"));
+                        "    Needs the parameters SQL, TABLE, ADDRESS_FIELD, TEXT_FIELD, TEXT_PREFIX and USE_LOCAL_TEXTS"));
                 }
 
-                return new DBAccessData(tableName, sql, addressFieldName, textFieldName);
+                if(textPrefix.StartsWith("'") && textPrefix.EndsWith("'") && textPrefix.Length >= 2)
+                {
+                    textPrefix = textPrefix.Substring(1, textPrefix.Length - 2);
+                }
+
+                bool useLocalTexts = false;
+                try { useLocalTexts = (bool)Convert.ToBoolean(_useLocalTexts); }
+                catch { Console.WriteLine($"'{_useLocalTexts}' is not convertable to true or false"); }
+
+                return new DBAccessData(tableName, sql, addressFieldName, textFieldName, textPrefix, useLocalTexts);
             }
 
             private static Dictionary<string, string> ReadFileData(string filepath)
