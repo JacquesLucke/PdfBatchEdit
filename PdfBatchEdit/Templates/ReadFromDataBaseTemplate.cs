@@ -30,7 +30,8 @@ namespace PdfBatchEdit.Templates
             Console.WriteLine(accessData);
             Console.WriteLine();
 
-            List<DBRecord> records = LoadAndCorrectData(databasePath, accessData);
+            List<BatchFileData> batchFileDataList = LoadAndCorrectData(databasePath, accessData);
+            batchFileDataList.Sort(BatchFileData.SortByNumber);
 
             TextEffect effect = new TextEffect("");
             effect.UseLocalTexts = true;
@@ -44,28 +45,29 @@ namespace PdfBatchEdit.Templates
             data.AddEffectToAllFiles(effect);
 
             int counter = 0;
-            foreach(DBRecord record in records)
+            foreach(BatchFileData batchFileData in batchFileDataList)
             {
-                if (File.Exists(record.path))
+                if (File.Exists(batchFileData.path))
                 {
-                    BatchFile file = data.AddFileWithAllEffects(record.path);
+                    BatchFile file = data.AddFileWithAllEffects(batchFileData.path);
+                    file.OutputNamePrefix = Convert.ToString(counter).PadLeft(3, '0') + " ";
                     LocalTextEffectSettings settings = (LocalTextEffectSettings)file.GetLocalSettingsForEffect(effect);
-                    settings.Text = "Pos. " + record.text;
+                    settings.Text = "Pos. " + batchFileData.CombinedText;
                     counter++;
                 }
                 else
                 {
-                    Console.WriteLine($"File '{record.path}' not found.");
+                    Console.WriteLine($"File '{batchFileData.path}' not found.");
                 }
             }
 
             Console.WriteLine($"{counter} files loaded.");
         }
 
-        public static List<DBRecord> LoadAndCorrectData(string databasePath, DBAccessData accessData)
+        public static List<BatchFileData> LoadAndCorrectData(string databasePath, DBAccessData accessData)
         {
             List<DBRecord> records = ReadDataBase(databasePath, accessData);
-            return CorrectMultifileRecords(records);
+            return CombineRecordsWithSameFile(records);
         }
 
         private static List<DBRecord> ReadDataBase(string databasePath, DBAccessData accessData)
@@ -124,24 +126,24 @@ namespace PdfBatchEdit.Templates
             return String.Empty;
         }
 
-        private static List<DBRecord> CorrectMultifileRecords(List<DBRecord> sourceRecords)
+        private static List<BatchFileData> CombineRecordsWithSameFile(List<DBRecord> sourceRecords)
         {
-            Dictionary<string, List<string>> textsByPath = new Dictionary<string, List<string>>();
-
+            var batchFileData = new List<BatchFileData>();
             foreach(DBRecord record in sourceRecords)
             {
-                if (!textsByPath.ContainsKey(record.path))
-                    textsByPath[record.path] = new List<string>();
-
-                textsByPath[record.path].Add(record.text);
+                var data = GetBatchFileDataWithPath(batchFileData, record.path);
+                data.AddText(record.text);
             }
+            return batchFileData;
+        }
 
-            List<DBRecord> records = new List<DBRecord>();
-            foreach(KeyValuePair<string, List<string>> item in textsByPath)
+        private static BatchFileData GetBatchFileDataWithPath(List<BatchFileData> existingDataList, string path)
+        {
+            foreach(BatchFileData data in existingDataList)
             {
-                records.Add(new DBRecord(item.Key, String.Join("/", item.Value)));
+                if (data.path == path) return data;
             }
-            return records;
+            return new BatchFileData(path);
         }
 
         public struct DBAccessData
@@ -234,6 +236,54 @@ namespace PdfBatchEdit.Templates
             {
                 this.path = path;
                 this.text = text;
+            }
+        }
+
+        public struct BatchFileData
+        {
+            public string path;
+            public List<string> texts;
+
+            public BatchFileData(string path)
+            {
+                this.path = path;
+                this.texts = new List<string>();
+            }
+
+            public void AddText(string text)
+            {
+                texts.Add(text);
+            }
+
+            public string CombinedText
+            {
+                get { return String.Join("/", texts); }
+            }
+
+            public int GetLowestNumberInTexts()
+            {
+                int min = int.MaxValue;
+                foreach (string text in texts)
+                {
+                    try
+                    {
+                        int value = Convert.ToInt32(text);
+                        if (value < min) min = value;
+                    }
+                    catch
+                    {
+                        Console.WriteLine($"'{text}' is not a number and can't be sorted.");
+                    }
+                }
+                return min;
+            }
+            public static int SortByNumber(BatchFileData a, BatchFileData b)
+            {
+                int value1 = a.GetLowestNumberInTexts();
+                int value2 = b.GetLowestNumberInTexts();
+                if (value1 < value2) return 1;
+                if (value1 > value2) return -1;
+                return 0;
             }
         }
     }

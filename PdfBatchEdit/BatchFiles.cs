@@ -9,10 +9,7 @@ namespace PdfBatchEdit
         {
             foreach (BatchFile file in this)
             {
-                string fileName = file.Source.NameWithExtension;
-                if (file.UseCustomOutputName)
-                    fileName = file.OutputName;
-
+                string fileName = file.OutputNamePrefix + file.Source.NameWithExtension;
                 string targetPath = Path.Combine(targetDirectory, fileName);
                 file.Save(new GenericFile(targetPath));
             }

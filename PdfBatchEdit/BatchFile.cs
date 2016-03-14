@@ -8,7 +8,7 @@ namespace PdfBatchEdit
     {
         private SourceFile source;
         private LocalSettingsCollection localSettings;
-        private string outputName = null;
+        private string outputNamePrefix = "";
 
         public BatchFile(string path)
         {
@@ -31,18 +31,10 @@ namespace PdfBatchEdit
             return source.Name;
         }
 
-        public bool UseCustomOutputName
+        public string OutputNamePrefix
         {
-            get { return outputName != null; }
-        }
-
-        public string OutputName
-        {
-            get { return outputName; }
-            set
-            {
-                outputName = value;
-            }
+            get { return outputNamePrefix; }
+            set { outputNamePrefix = value; }
         }
 
         public ILocalPdfEffectSettings GetLocalSettingsForEffect(IPdfEffect effect)
