@@ -51,7 +51,7 @@ namespace PdfBatchEdit.Templates
                 {
                     BatchFile file = data.AddFileWithAllEffects(batchFileData.path);
                     int prefixNumber = batchFileData.GetLowestSortElement();
-                    file.OutputNamePrefix = Convert.ToString(prefixNumber).PadLeft(3, '0') + " ";
+                    file.OutputNamePrefix = Convert.ToString(prefixNumber).PadLeft(3, '0') + "_";
                     LocalTextEffectSettings settings = (LocalTextEffectSettings)file.GetLocalSettingsForEffect(effect);
                     settings.Text = accessData.textPrefix + batchFileData.CombinedText;
                     counter++;
