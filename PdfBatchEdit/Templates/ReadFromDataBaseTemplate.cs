@@ -50,7 +50,7 @@ namespace PdfBatchEdit.Templates
                 if (File.Exists(batchFileData.path))
                 {
                     BatchFile file = data.AddFileWithAllEffects(batchFileData.path);
-                    int prefixNumber = batchFileData.GetLowestNumberInTexts();
+                    int prefixNumber = batchFileData.GetLowestSortElement();
                     file.OutputNamePrefix = Convert.ToString(prefixNumber).PadLeft(3, '0') + " ";
                     LocalTextEffectSettings settings = (LocalTextEffectSettings)file.GetLocalSettingsForEffect(effect);
                     settings.Text = accessData.textPrefix + batchFileData.CombinedText;
@@ -94,6 +94,9 @@ namespace PdfBatchEdit.Templates
             if (!table.Columns.Contains(accessData.textFieldName))
                 Console.WriteLine($"The table has no '{accessData.textFieldName}' field.");
 
+            if (!table.Columns.Contains(accessData.sortFieldName))
+                Console.WriteLine($"The table has no '{accessData.sortFieldName}' field.");
+
             foreach (DataRow row in table.Rows)
             {
                 string address = "";
@@ -104,7 +107,11 @@ namespace PdfBatchEdit.Templates
                 if (table.Columns.Contains(accessData.textFieldName))
                     text = Convert.ToString(row[accessData.textFieldName]);
 
-                records.Add(new DBRecord(address, text));
+                string sortElement = "";
+                if (table.Columns.Contains(accessData.sortFieldName))
+                    sortElement = Convert.ToString(row[accessData.sortFieldName]);
+
+                records.Add(new DBRecord(address, text, sortElement));
             }
 
 
@@ -133,7 +140,7 @@ namespace PdfBatchEdit.Templates
             foreach(DBRecord record in sourceRecords)
             {
                 var data = GetBatchFileDataWithPath(batchFileData, record.path);
-                data.AddText(record.text);
+                data.AddEntry(record.text, record.sortElement);
                 if (!batchFileData.Contains(data))
                 {
                     batchFileData.Add(data);
@@ -157,15 +164,17 @@ namespace PdfBatchEdit.Templates
             public string sql;
             public string addressFieldName;
             public string textFieldName;
+            public string sortFieldName;
             public string textPrefix;
             public bool useLocalTexts;
 
-            public DBAccessData(string tableName, string sql, string addressFieldName, string textFieldName, string textPrefix, bool useLocalTexts)
+            public DBAccessData(string tableName, string sql, string addressFieldName, string textFieldName, string sortFieldName, string textPrefix, bool useLocalTexts)
             {
                 this.tableName = tableName;
                 this.sql = sql;
                 this.addressFieldName = addressFieldName;
                 this.textFieldName = textFieldName;
+                this.sortFieldName = sortFieldName;
                 this.textPrefix = textPrefix;
                 this.useLocalTexts = useLocalTexts;
             }
@@ -177,6 +186,7 @@ namespace PdfBatchEdit.Templates
                     "SQL:             " + sql,
                     "Address Field:   " + addressFieldName,
                     "Text Field:      " + textFieldName,
+                    "Sort Field:      " + sortFieldName,
                     "Text Prefix:     '" + textPrefix + "'",
                     "Use Local Texts: " + useLocalTexts);
             }
@@ -190,20 +200,21 @@ namespace PdfBatchEdit.Templates
 
                 Dictionary<string, string> data = ReadFileData(accessDataFilepath);
 
-                string tableName, sql, addressFieldName, textFieldName, textPrefix, _useLocalTexts;
+                string tableName, sql, addressFieldName, textFieldName, sortFieldName, textPrefix, _useLocalTexts;
                 
                 data.TryGetValue("SQL", out sql);
                 data.TryGetValue("TABLE", out tableName);
                 data.TryGetValue("ADDRESS_FIELD", out addressFieldName);
                 data.TryGetValue("TEXT_FIELD", out textFieldName);
+                data.TryGetValue("SORT_FIELD", out sortFieldName);
                 data.TryGetValue("TEXT_PREFIX", out textPrefix);
                 data.TryGetValue("USE_LOCAL_TEXTS", out _useLocalTexts);
 
-                if (sql == null || tableName == null || addressFieldName == null || textFieldName == null || textPrefix == null || _useLocalTexts == null)
+                if (sql == null || tableName == null || addressFieldName == null || textFieldName == null || sortFieldName  == null || textPrefix == null || _useLocalTexts == null)
                 {
                     throw new Exception(String.Join(Environment.NewLine,
                         "Missing parameters in the db_access.txt file.",
-                        "    Needs the parameters SQL, TABLE, ADDRESS_FIELD, TEXT_FIELD, TEXT_PREFIX and USE_LOCAL_TEXTS"));
+                        "    Needs the parameters SQL, TABLE, ADDRESS_FIELD, TEXT_FIELD, SORT_FIELD, TEXT_PREFIX and USE_LOCAL_TEXTS"));
                 }
 
                 if(textPrefix.StartsWith("'") && textPrefix.EndsWith("'") && textPrefix.Length >= 2)
@@ -215,7 +226,7 @@ namespace PdfBatchEdit.Templates
                 try { useLocalTexts = (bool)Convert.ToBoolean(_useLocalTexts); }
                 catch { Console.WriteLine($"'{_useLocalTexts}' is not convertable to true or false"); }
 
-                return new DBAccessData(tableName, sql, addressFieldName, textFieldName, textPrefix, useLocalTexts);
+                return new DBAccessData(tableName, sql, addressFieldName, textFieldName, sortFieldName, textPrefix, useLocalTexts);
             }
 
             private static Dictionary<string, string> ReadFileData(string filepath)
@@ -253,11 +264,13 @@ namespace PdfBatchEdit.Templates
         {
             public string path;
             public string text;
+            public string sortElement;
 
-            public DBRecord(string path, string text)
+            public DBRecord(string path, string text, string sortElement)
             {
                 this.path = path;
                 this.text = text;
+                this.sortElement = sortElement;
             }
         }
 
@@ -265,16 +278,26 @@ namespace PdfBatchEdit.Templates
         {
             public string path;
             public List<string> texts;
+            public List<string> sortElements;
 
             public BatchFileData(string path)
             {
                 this.path = path;
                 this.texts = new List<string>();
+                this.sortElements = new List<string>();
             }
 
-            public void AddText(string text)
+            public void AddEntry(string text, string sortElement)
             {
-                texts.Add(text);
+                if (!texts.Contains(text))
+                {
+                    texts.Add(text);
+                }
+                if (!sortElements.Contains(sortElement))
+                {
+                    sortElements.Add(sortElement);
+                }
+                texts.Sort();
             }
 
             public string CombinedText
@@ -282,27 +305,27 @@ namespace PdfBatchEdit.Templates
                 get { return String.Join("/", texts); }
             }
 
-            public int GetLowestNumberInTexts()
+            public int GetLowestSortElement()
             {
                 int min = int.MaxValue;
-                foreach (string text in texts)
+                foreach (string element in sortElements)
                 {
                     try
                     {
-                        int value = Convert.ToInt32(text);
+                        int value = Convert.ToInt32(element);
                         if (value < min) min = value;
                     }
                     catch
                     {
-                        Console.WriteLine($"'{text}' is not a number and can't be sorted.");
+                        Console.WriteLine($"'{element}' is not a number and can't be sorted.");
                     }
                 }
                 return min;
             }
             public static int SortByNumber(BatchFileData a, BatchFileData b)
             {
-                int value1 = a.GetLowestNumberInTexts();
-                int value2 = b.GetLowestNumberInTexts();
+                int value1 = a.GetLowestSortElement();
+                int value2 = b.GetLowestSortElement();
                 if (value1 < value2) return -1;
                 if (value1 > value2) return 1;
                 return 0;
