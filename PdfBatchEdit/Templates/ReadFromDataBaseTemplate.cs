@@ -50,7 +50,8 @@ namespace PdfBatchEdit.Templates
                 if (File.Exists(batchFileData.path))
                 {
                     BatchFile file = data.AddFileWithAllEffects(batchFileData.path);
-                    file.OutputNamePrefix = Convert.ToString(counter).PadLeft(3, '0') + " ";
+                    int prefixNumber = batchFileData.GetLowestNumberInTexts();
+                    file.OutputNamePrefix = Convert.ToString(prefixNumber).PadLeft(3, '0') + " ";
                     LocalTextEffectSettings settings = (LocalTextEffectSettings)file.GetLocalSettingsForEffect(effect);
                     settings.Text = "Pos. " + batchFileData.CombinedText;
                     counter++;
@@ -133,6 +134,10 @@ namespace PdfBatchEdit.Templates
             {
                 var data = GetBatchFileDataWithPath(batchFileData, record.path);
                 data.AddText(record.text);
+                if (!batchFileData.Contains(data))
+                {
+                    batchFileData.Add(data);
+                }
             }
             return batchFileData;
         }
@@ -281,8 +286,8 @@ namespace PdfBatchEdit.Templates
             {
                 int value1 = a.GetLowestNumberInTexts();
                 int value2 = b.GetLowestNumberInTexts();
-                if (value1 < value2) return 1;
-                if (value1 > value2) return -1;
+                if (value1 < value2) return -1;
+                if (value1 > value2) return 1;
                 return 0;
             }
         }
