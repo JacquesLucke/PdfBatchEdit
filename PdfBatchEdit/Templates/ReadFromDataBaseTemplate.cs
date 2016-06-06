@@ -241,14 +241,14 @@ namespace PdfBatchEdit.Templates
                 catch { Console.WriteLine($"'{_useLocalTexts}' is not convertable to true or false"); }
 
                 FileNameType outputNameType = FileNameType.SourceNameAndPrefix;
-                if (_outputNameType == "PREFIX_ONLY")
+                if (_outputNameType == "NUMBER_ONLY")
                     outputNameType = FileNameType.PrefixOnly;
-                else if (_outputNameType == "PREFIX_AND_SOURCE_NAME")
+                else if (_outputNameType == "NUMBER_AND_SOURCE_NAME")
                     outputNameType = FileNameType.SourceNameAndPrefix;
                 else if (_outputNameType == "SOURCE_NAME")
                     outputNameType = FileNameType.SourceName;
                 else
-                    throw new Exception("OUTPUT_NAME_TYPE has to be in ['PREFIX_ONLY', 'PREFIX_AND_SOURCE_NAME', 'SOURCE_NAME']");
+                    throw new Exception("OUTPUT_NAME_TYPE has to be in ['NUMBER_ONLY', 'NUMBER_AND_SOURCE_NAME', 'SOURCE_NAME']");
 
                 return new DBAccessData(tableName, sql, addressFieldName, textFieldName, sortFieldName, textPrefix, useLocalTexts, outputNameType);
             }
