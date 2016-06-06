@@ -50,8 +50,18 @@ namespace PdfBatchEdit.Templates
                 if (File.Exists(batchFileData.path))
                 {
                     BatchFile file = data.AddFileWithAllEffects(batchFileData.path);
+
+                    file.OutputNameType = accessData.outputNameType;
                     int prefixNumber = batchFileData.GetLowestSortElement();
-                    file.OutputNamePrefix = Convert.ToString(prefixNumber).PadLeft(3, '0') + "_";
+                    string prefixNumberString = Convert.ToString(prefixNumber).PadLeft(3, '0');
+
+                    if (accessData.outputNameType == FileNameType.SourceName)
+                        file.OutputNamePrefix = "";
+                    if (accessData.outputNameType == FileNameType.PrefixOnly)
+                        file.OutputNamePrefix = prefixNumberString;
+                    if (accessData.outputNameType == FileNameType.SourceNameAndPrefix)
+                        file.OutputNamePrefix = prefixNumberString + "_";
+
                     LocalTextEffectSettings settings = (LocalTextEffectSettings)file.GetLocalSettingsForEffect(effect);
                     settings.Text = accessData.textPrefix + batchFileData.CombinedText;
                     counter++;
@@ -167,8 +177,9 @@ namespace PdfBatchEdit.Templates
             public string sortFieldName;
             public string textPrefix;
             public bool useLocalTexts;
+            public FileNameType outputNameType;
 
-            public DBAccessData(string tableName, string sql, string addressFieldName, string textFieldName, string sortFieldName, string textPrefix, bool useLocalTexts)
+            public DBAccessData(string tableName, string sql, string addressFieldName, string textFieldName, string sortFieldName, string textPrefix, bool useLocalTexts, FileNameType outputNameType)
             {
                 this.tableName = tableName;
                 this.sql = sql;
@@ -177,18 +188,20 @@ namespace PdfBatchEdit.Templates
                 this.sortFieldName = sortFieldName;
                 this.textPrefix = textPrefix;
                 this.useLocalTexts = useLocalTexts;
+                this.outputNameType = outputNameType;
             }
 
             public override string ToString()
             {
                 return String.Join("\n",
-                    "Table:           " + tableName,
-                    "SQL:             " + sql,
-                    "Address Field:   " + addressFieldName,
-                    "Text Field:      " + textFieldName,
-                    "Sort Field:      " + sortFieldName,
-                    "Text Prefix:     '" + textPrefix + "'",
-                    "Use Local Texts: " + useLocalTexts);
+                    "Table:            " + tableName,
+                    "SQL:              " + sql,
+                    "Address Field:    " + addressFieldName,
+                    "Text Field:       " + textFieldName,
+                    "Sort Field:       " + sortFieldName,
+                    "Text Prefix:      '" + textPrefix + "'",
+                    "Use Local Texts:  " + useLocalTexts,
+                    "Output Name Type: " + outputNameType);
             }
 
             public static DBAccessData FromFile(string accessDataFilepath)
@@ -200,7 +213,7 @@ namespace PdfBatchEdit.Templates
 
                 Dictionary<string, string> data = ReadFileData(accessDataFilepath);
 
-                string tableName, sql, addressFieldName, textFieldName, sortFieldName, textPrefix, _useLocalTexts;
+                string tableName, sql, addressFieldName, textFieldName, sortFieldName, textPrefix, _useLocalTexts, _outputNameType;
                 
                 data.TryGetValue("SQL", out sql);
                 data.TryGetValue("TABLE", out tableName);
@@ -209,12 +222,13 @@ namespace PdfBatchEdit.Templates
                 data.TryGetValue("SORT_FIELD", out sortFieldName);
                 data.TryGetValue("TEXT_PREFIX", out textPrefix);
                 data.TryGetValue("USE_LOCAL_TEXTS", out _useLocalTexts);
+                data.TryGetValue("OUTPUT_NAME_TYPE", out _outputNameType);
 
-                if (sql == null || tableName == null || addressFieldName == null || textFieldName == null || sortFieldName  == null || textPrefix == null || _useLocalTexts == null)
+                if (sql == null || tableName == null || addressFieldName == null || textFieldName == null || sortFieldName  == null || textPrefix == null || _useLocalTexts == null || _outputNameType == null)
                 {
                     throw new Exception(String.Join(Environment.NewLine,
                         "Missing parameters in the db_access.txt file.",
-                        "    Needs the parameters SQL, TABLE, ADDRESS_FIELD, TEXT_FIELD, SORT_FIELD, TEXT_PREFIX and USE_LOCAL_TEXTS"));
+                        "    Needs the parameters SQL, TABLE, ADDRESS_FIELD, TEXT_FIELD, SORT_FIELD, TEXT_PREFIX, USE_LOCAL_TEXTS and OUTPUT_NAME_TYPE"));
                 }
 
                 if(textPrefix.StartsWith("'") && textPrefix.EndsWith("'") && textPrefix.Length >= 2)
@@ -226,7 +240,17 @@ namespace PdfBatchEdit.Templates
                 try { useLocalTexts = (bool)Convert.ToBoolean(_useLocalTexts); }
                 catch { Console.WriteLine($"'{_useLocalTexts}' is not convertable to true or false"); }
 
-                return new DBAccessData(tableName, sql, addressFieldName, textFieldName, sortFieldName, textPrefix, useLocalTexts);
+                FileNameType outputNameType = FileNameType.SourceNameAndPrefix;
+                if (_outputNameType == "PREFIX_ONLY")
+                    outputNameType = FileNameType.PrefixOnly;
+                else if (_outputNameType == "PREFIX_AND_SOURCE_NAME")
+                    outputNameType = FileNameType.SourceNameAndPrefix;
+                else if (_outputNameType == "SOURCE_NAME")
+                    outputNameType = FileNameType.SourceName;
+                else
+                    throw new Exception("OUTPUT_NAME_TYPE has to be in ['PREFIX_ONLY', 'PREFIX_AND_SOURCE_NAME', 'SOURCE_NAME']");
+
+                return new DBAccessData(tableName, sql, addressFieldName, textFieldName, sortFieldName, textPrefix, useLocalTexts, outputNameType);
             }
 
             private static Dictionary<string, string> ReadFileData(string filepath)

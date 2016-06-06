@@ -46,6 +46,11 @@ namespace PdfBatchEdit
             get { return System.IO.Path.GetFileName(path); }
         }
 
+        public string Extension
+        {
+            get { return System.IO.Path.GetExtension(path); }
+        }
+
         public override string ToString()
         {
             return Name;

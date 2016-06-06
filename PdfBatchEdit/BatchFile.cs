@@ -9,6 +9,7 @@ namespace PdfBatchEdit
         private SourceFile source;
         private LocalSettingsCollection localSettings;
         private string outputNamePrefix = "";
+        private FileNameType nameType = FileNameType.SourceNameAndPrefix;
 
         public BatchFile(string path)
         {
@@ -31,10 +32,27 @@ namespace PdfBatchEdit
             return source.Name;
         }
 
+        public FileNameType OutputNameType
+        {
+            get { return nameType; }
+            set { nameType = value; }
+        }
+
         public string OutputNamePrefix
         {
             get { return outputNamePrefix; }
             set { outputNamePrefix = value; }
+        }
+
+        public string OutputFileName
+        {
+            get
+            {
+                if (nameType == FileNameType.SourceName) return source.NameWithExtension;
+                if (nameType == FileNameType.SourceNameAndPrefix) return outputNamePrefix + source.NameWithExtension;
+                if (nameType == FileNameType.PrefixOnly) return outputNamePrefix + source.Extension;
+                throw new Exception("Execution should not reach this point.");
+            }
         }
 
         public ILocalPdfEffectSettings GetLocalSettingsForEffect(IPdfEffect effect)
@@ -79,5 +97,12 @@ namespace PdfBatchEdit
             }
             return document;
         }
+    }
+
+    public enum FileNameType
+    {
+        SourceName,
+        SourceNameAndPrefix,
+        PrefixOnly
     }
 }
