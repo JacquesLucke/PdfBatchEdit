@@ -145,6 +145,14 @@ namespace PdfBatchEdit.Effects
             return settings;
         }
 
+        public bool CheckIfDocumentWillBeModified(ILocalPdfEffectSettings localDataObject)
+        {
+            LocalTextEffectSettings localData = (LocalTextEffectSettings)localDataObject;
+            if (localData.LocalTextIsUsed && localData.Text.Trim() == "") return false;
+            if (!localData.LocalTextIsUsed && this.Text.Trim() == "") return false;
+            return true;
+        }
+
         public void ApplyEffect(ILocalPdfEffectSettings localDataObject, PdfDocument document)
         {
             LocalTextEffectSettings localData = (LocalTextEffectSettings)localDataObject;

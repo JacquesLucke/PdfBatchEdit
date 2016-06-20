@@ -1,6 +1,7 @@
 ﻿using PdfBatchEdit.Effects;
 using PdfSharp.Pdf;
 using System;
+using System.IO;
 
 namespace PdfBatchEdit
 {
@@ -71,14 +72,21 @@ namespace PdfBatchEdit
             return file;
         }
 
-        public void Save(GenericFile file, bool overwrite = true, bool overwriteSource = false)
+        public void Save(GenericFile targetFile, bool overwrite = true, bool overwriteSource = false)
         {
-            if (file.Exists && !overwrite) throw new Exception("You are not allowed to overwrite existing files."); ;
-            if (file.Path == source.Path && !overwriteSource) throw new Exception("You are not allowed to overwrite the source file.");
+            if (targetFile.Exists && !overwrite) throw new Exception("You are not allowed to overwrite existing files."); ;
+            if (targetFile.Path == source.Path && !overwriteSource) throw new Exception("You are not allowed to overwrite the source file.");
 
-            file.EnsureDirectory();
-            PdfDocument document = ApplyEffects();
-            document.Save(file.Path);
+            targetFile.EnsureDirectory();
+            if (this.IsModified)
+            {
+                PdfDocument document = ApplyEffects();
+                document.Save(targetFile.Path);
+            }
+            else
+            {
+                File.Copy(source.Path, targetFile.Path, true);
+            }
         }
 
         private GenericFile getNewPreviewFile()
@@ -96,6 +104,16 @@ namespace PdfBatchEdit
                 effect.GetMainEffect().ApplyEffect(effect, document);
             }
             return document;
+        }
+
+        private bool IsModified
+        {
+            get
+            {
+                foreach (ILocalPdfEffectSettings effect in localSettings)
+                    if (effect.GetMainEffect().CheckIfDocumentWillBeModified(effect)) return true;
+                return false;
+            }
         }
     }
 

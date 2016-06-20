@@ -155,7 +155,7 @@ namespace PdfBatchEdit
 
         private void newTextEffectButton_Click(object sender, RoutedEventArgs e)
         {
-            data.AddEffectToAllFiles(new Effects.TextEffect("Example"));
+            data.AddEffectToAllFiles(new Effects.TextEffect(""));
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)

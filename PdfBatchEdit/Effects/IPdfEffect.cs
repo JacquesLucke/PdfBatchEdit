@@ -6,6 +6,8 @@ namespace PdfBatchEdit.Effects
     {
         void ApplyEffect(ILocalPdfEffectSettings localData, PdfDocument document);
 
+        bool CheckIfDocumentWillBeModified(ILocalPdfEffectSettings localData);
+
         ILocalPdfEffectSettings GetLocalSettings();
     }
 
